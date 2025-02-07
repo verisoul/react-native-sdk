@@ -6,6 +6,7 @@ import ai.verisoul.sdk.VerisoulEnvironment
 import ai.verisoul.sdk.webview.VerisoulSessionCallback
 import android.os.Handler
 import android.os.Looper
+import android.view.MotionEvent
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -22,10 +23,18 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
     "staging" to VerisoulEnvironment.Sandbox
   )
 
+  private val actions: Map<Int, Int> = mapOf(
+    0 to MotionEvent.ACTION_DOWN,
+    1 to MotionEvent.ACTION_UP,
+    2 to MotionEvent.ACTION_MOVE,
+
+    )
+
 
   override fun getName(): String {
     return NAME
   }
+
   private val mainHandler = Handler(Looper.getMainLooper())
 
   @ReactMethod
@@ -51,7 +60,8 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
   fun configure(env: String, productId: String, promise: Promise) {
     mainHandler.post {
       try {
-        val logLevel = sdkLogLevels[env] ?: throw IllegalArgumentException("Invalid environment: $env")
+        val logLevel =
+          sdkLogLevels[env] ?: throw IllegalArgumentException("Invalid environment: $env")
         Verisoul.init(reactApplicationContext, logLevel, productId)
         promise.resolve(Unit) // More idiomatic than empty string ""
       } catch (e: Exception) {
@@ -59,6 +69,28 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
       }
     }
   }
+
+    @ReactMethod
+    fun onActionEvent(x:Float,y:Float,action: Int, promise: Promise) {
+
+        try {
+          val motionEvent = MotionEvent.obtain(
+            System.currentTimeMillis(),
+            System.currentTimeMillis(),
+            action,
+            x,
+            y,
+            0
+          )
+          Verisoul.onTouchEvent(motionEvent)
+
+          promise.resolve(null);
+        } catch (e: Exception) {
+          promise.reject(e);
+        }
+      
+    }
+
 
   companion object {
     const val NAME = "VerisoulReactnative"

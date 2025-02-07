@@ -1,6 +1,6 @@
-import Verisoul from 'verisoul-reactnative';
-import { View, StyleSheet, Button, Alert } from 'react-native';
-import { useEffect } from 'react';
+import Verisoul, { MotionAction } from 'verisoul-reactnative';
+import { View, StyleSheet, Button, Alert, PanResponder } from 'react-native';
+import { useEffect, useRef } from 'react';
 import { VerisoulEnvironment } from '../../src/utils/Enums';
 
 export default function App() {
@@ -11,8 +11,44 @@ export default function App() {
     });
   }, []);
 
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+
+      // User touches down
+      onPanResponderGrant: (_, gestureState) => {
+        console.log('Touch Down:', gestureState.x0, gestureState.y0);
+        Verisoul.onTouchEvent(
+          gestureState.x0,
+          gestureState.y0,
+          MotionAction.ACTION_DOWN
+        );
+      },
+
+      // User moves finger on screen
+      onPanResponderMove: (_, gestureState) => {
+        console.log('Touch Move:', gestureState.moveX, gestureState.moveY);
+        Verisoul.onTouchEvent(
+          gestureState.moveX,
+          gestureState.moveY,
+          MotionAction.ACTION_MOVE
+        );
+      },
+
+      // User lifts finger
+      onPanResponderRelease: (_, gestureState) => {
+        console.log('Touch Up:', gestureState.x0, gestureState.x0);
+        Verisoul.onTouchEvent(
+          gestureState.x0,
+          gestureState.y0,
+          MotionAction.ACTION_UP
+        );
+      },
+    })
+  ).current;
+
   return (
-    <View style={styles.container}>
+    <View style={styles.container} {...panResponder.panHandlers}>
       <Button
         onPress={async () => {
           try {
