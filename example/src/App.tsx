@@ -1,17 +1,29 @@
-import { useState, useEffect } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'verisoul-reactnative';
+import Verisoul from 'verisoul-reactnative';
+import { View, StyleSheet, Button, Alert } from 'react-native';
+import { useEffect } from 'react';
+import { VerisoulEnvironment } from '../../src/utils/Enums';
 
 export default function App() {
-  const [result, setResult] = useState<number | undefined>();
-
   useEffect(() => {
-    multiply(3, 7).then(setResult);
+    Verisoul.configure({
+      environment: VerisoulEnvironment.production,
+      projectId: 'App token',
+    });
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Button
+        onPress={async () => {
+          try {
+            const sessionData = await Verisoul.getSessionID();
+            Alert.alert('Session ID', sessionData);
+          } catch (e) {
+            console.error(e);
+          }
+        }}
+        title="Get Session ID"
+      />
     </View>
   );
 }
@@ -21,10 +33,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
   },
 });

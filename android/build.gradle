@@ -89,11 +89,19 @@ repositories {
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
 
+rootProject.allprojects {
+  repositories {
+    maven { url = uri("https://us-central1-maven.pkg.dev/verisoul/android") }
+  }
+  }
+
 dependencies {
   // For < 0.71, this will be from the local maven repo
   // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  api "ai.verisoul:android:1.0.6"
+
 }
 

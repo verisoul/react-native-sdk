@@ -1,22 +1,6 @@
-import { NativeModules, Platform } from 'react-native';
+import type { VerisoulConfig } from './models/VerisoulConfig';
+import * as Verisoul from './modules/Verisoul';
 
-const LINKING_ERROR =
-  `The package 'verisoul-reactnative' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo Go\n';
-
-const VerisoulReactnative = NativeModules.VerisoulReactnative
-  ? NativeModules.VerisoulReactnative
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
-
-export function multiply(a: number, b: number): Promise<number> {
-  return VerisoulReactnative.multiply(a, b);
-}
+export * from './utils/Enums';
+export type { VerisoulConfig };
+export default Verisoul;
