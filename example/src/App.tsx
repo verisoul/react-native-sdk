@@ -1,7 +1,9 @@
-import Verisoul, { MotionAction } from 'verisoul-reactnative';
 import { View, StyleSheet, Button, Alert, PanResponder } from 'react-native';
 import { useEffect, useRef } from 'react';
-import { VerisoulEnvironment } from '../../src/utils/Enums';
+import Verisoul, {
+  MotionAction,
+  VerisoulEnvironment,
+} from 'verisoul-reactnative';
 
 export default function App() {
   useEffect(() => {
@@ -17,7 +19,6 @@ export default function App() {
 
       // User touches down
       onPanResponderGrant: (_, gestureState) => {
-        console.log('Touch Down:', gestureState.x0, gestureState.y0);
         Verisoul.onTouchEvent(
           gestureState.x0,
           gestureState.y0,
@@ -27,7 +28,6 @@ export default function App() {
 
       // User moves finger on screen
       onPanResponderMove: (_, gestureState) => {
-        console.log('Touch Move:', gestureState.moveX, gestureState.moveY);
         Verisoul.onTouchEvent(
           gestureState.moveX,
           gestureState.moveY,
@@ -37,7 +37,6 @@ export default function App() {
 
       // User lifts finger
       onPanResponderRelease: (_, gestureState) => {
-        console.log('Touch Up:', gestureState.x0, gestureState.x0);
         Verisoul.onTouchEvent(
           gestureState.x0,
           gestureState.y0,

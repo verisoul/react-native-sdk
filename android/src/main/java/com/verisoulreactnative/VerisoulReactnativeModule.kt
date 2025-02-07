@@ -88,7 +88,7 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
         } catch (e: Exception) {
           promise.reject(e);
         }
-      
+
     }
 
 

@@ -98,6 +98,44 @@ lived and will expire after 24 hours. The application can obtain session ID by p
 ```js
 const sessionData = await Verisoul.getSessionID();
 ```
+### 3. Provide Touch Events
+
+```js
+
+const panResponder = useRef(
+PanResponder.create({
+onStartShouldSetPanResponder: () => true,
+
+      // User touches down
+      onPanResponderGrant: (_, gestureState) => {
+        Verisoul.onTouchEvent(
+          gestureState.x0,
+          gestureState.y0,
+          MotionAction.ACTION_DOWN
+        );
+      },
+
+      // User moves finger on screen
+      onPanResponderMove: (_, gestureState) => {
+        Verisoul.onTouchEvent(
+          gestureState.moveX,
+          gestureState.moveY,
+          MotionAction.ACTION_MOVE
+        );
+      },
+
+      // User lifts finger
+      onPanResponderRelease: (_, gestureState) => {
+        Verisoul.onTouchEvent(
+          gestureState.x0,
+          gestureState.y0,
+          MotionAction.ACTION_UP
+        );
+      },
+    })
+).current;
+```
+
 
 ## Android
 
