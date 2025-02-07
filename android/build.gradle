@@ -85,6 +85,8 @@ android {
 repositories {
   mavenCentral()
   google()
+      maven { url = uri("https://us-central1-maven.pkg.dev/verisoul/android") }
+
 }
 
 def kotlin_version = getExtOrDefault("kotlinVersion")

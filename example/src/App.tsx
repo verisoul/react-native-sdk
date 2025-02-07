@@ -1,9 +1,16 @@
-import { View, StyleSheet, Button, Alert, PanResponder } from 'react-native';
-import { useEffect, useRef } from 'react';
+import {
+  View,
+  StyleSheet,
+  Button,
+  PanResponder,
+  Image,
+  Text,
+} from 'react-native';
+import { useEffect, useRef, useState } from 'react';
 import Verisoul, {
   MotionAction,
   VerisoulEnvironment,
-} from 'verisoul-reactnative';
+} from '@verisoul_ai/react-native-verisoul';
 
 export default function App() {
   useEffect(() => {
@@ -11,8 +18,13 @@ export default function App() {
       environment: VerisoulEnvironment.production,
       projectId: 'App token',
     });
+    const timeout = setTimeout(async () => {
+      const sessionData = await Verisoul.getSessionID();
+      setSessionID(sessionData);
+    }, 2000);
+    return () => clearTimeout(timeout);
   }, []);
-
+  const [sessionID, setSessionID] = useState<string | null>(null);
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -48,11 +60,20 @@ export default function App() {
 
   return (
     <View style={styles.container} {...panResponder.panHandlers}>
+      <View style={styles.imgContainer}>
+        <Image
+          style={styles.img}
+          source={require('../assets/verisoul-logo-light.png')}
+        />
+      </View>
+      <Text style={styles.textBoldLarge}>React Native Sample App</Text>
+      <Text style={styles.textNormal}>{`SessionId: ${sessionID}`} </Text>
+
       <Button
         onPress={async () => {
           try {
             const sessionData = await Verisoul.getSessionID();
-            Alert.alert('Session ID', sessionData);
+            setSessionID(sessionData);
           } catch (e) {
             console.error(e);
           }
@@ -68,5 +89,25 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  img: {
+    width: '100%',
+    height: '100%',
+  },
+  imgContainer: {
+    width: '80%',
+    height: '10%',
+    marginVertical: 10,
+  },
+  textBoldLarge: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black',
+    marginVertical: 10,
+  },
+  textNormal: {
+    fontSize: 16,
+    color: 'black',
+    marginVertical: 10,
   },
 });
