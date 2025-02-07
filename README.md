@@ -90,7 +90,10 @@ allprojects {
 ### 1. Initialization
 
 ```js
-import Verisoul from 'verisoul-reactnative';
+import Verisoul, {
+  MotionAction,
+  VerisoulEnvironment,
+} from '@verisoul_ai/react-native-verisoul';
 
 useEffect(() => {
   Verisoul.configure({
