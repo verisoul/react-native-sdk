@@ -1,3 +1,19 @@
+buildscript {
+  // Buildscript is evaluated before everything else so we can't use getExtOrDefault
+  def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["VerisoulReactnative_kotlinVersion"]
+
+  repositories {
+    google()
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath "com.android.tools.build:gradle:7.2.1"
+    // noinspection DifferentKotlinGradleVersion
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
+}
+
 def reactNativeArchitectures() {
   def value = rootProject.getProperties().get("reactNativeArchitectures")
   return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
@@ -73,6 +89,8 @@ repositories {
 
 }
 
+def kotlin_version = getExtOrDefault("kotlinVersion")
+
 rootProject.allprojects {
   repositories {
     mavenCentral()
@@ -87,7 +105,8 @@ dependencies {
   // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
-  api "ai.verisoul:android:1.0.6"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  api "ai.verisoul:android:1.0.8"
 
 }
 
