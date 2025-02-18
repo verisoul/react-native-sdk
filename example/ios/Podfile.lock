@@ -1500,7 +1500,7 @@ PODS:
     - React-perflogger (= 0.77.0)
     - React-utils (= 0.77.0)
   - SocketRocket (0.7.1)
-  - verisoul-reactnative (0.1.0):
+  - verisoul-reactnative (0.1.7):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1520,9 +1520,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - VerisoulSDK (= 0.2.5)
+    - VerisoulSDK (= 0.3.0)
     - Yoga
-  - VerisoulSDK (0.2.5)
+  - VerisoulSDK (0.3.0)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1805,10 +1805,10 @@ SPEC CHECKSUMS:
   ReactCodegen: c08a5113d9c9c895fe10f3c296f74c6b705a60a9
   ReactCommon: 1bd2dc684d7992acbf0dfee887b89a57a1ead86d
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  verisoul-reactnative: ee3acc25148af06af467fcb87679be58d4f1753c
-  VerisoulSDK: 412bb5e252b7657e96aebe9d2b49652ddaae5239
+  verisoul-reactnative: aa159410c5010ec241418a5409acfcb269b15f30
+  VerisoulSDK: fbeab6fe8914c3ccb9e927a4ee7dd3a7c07711fb
   Yoga: 78d74e245ed67bb94275a1316cdc170b9b7fe884
 
-PODFILE CHECKSUM: 1fc8cf9b7dc32f44b647a830f60df2e6aab071e0
+PODFILE CHECKSUM: 64f3f180196e96b312e7630a98f7ea37eb6642a9
 
 COCOAPODS: 1.16.2
