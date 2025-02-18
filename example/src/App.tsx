@@ -13,18 +13,22 @@ import Verisoul, {
 } from '@verisoul_ai/react-native-verisoul';
 
 export default function App() {
-  useEffect(() => {
-    Verisoul.configure({
-      environment: VerisoulEnvironment.production,
-      projectId: 'App token',
-    });
-    const timeout = setTimeout(async () => {
-      const sessionData = await Verisoul.getSessionID();
-      setSessionID(sessionData);
-    }, 2000);
-    return () => clearTimeout(timeout);
-  }, []);
   const [sessionID, setSessionID] = useState<string | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        await Verisoul.configure({
+          environment: VerisoulEnvironment.production,
+          projectId: '0000-0000-0000-0000',
+        });
+        const sessionData = await Verisoul.getSessionID();
+        setSessionID(sessionData);
+      } catch (error) {
+        console.log(JSON.stringify(error, null, 2));
+      }
+    })();
+  }, []);
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,

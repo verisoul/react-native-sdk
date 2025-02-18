@@ -63,7 +63,7 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
         val logLevel =
           sdkLogLevels[env] ?: throw IllegalArgumentException("Invalid environment: $env")
         Verisoul.init(reactApplicationContext, logLevel, productId)
-        promise.resolve(Unit) // More idiomatic than empty string ""
+        promise.resolve(true)
       } catch (e: Exception) {
         promise.reject(e)
       }
