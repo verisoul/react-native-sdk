@@ -2,8 +2,8 @@ package com.verisoulreactnative
 
 import ai.verisoul.sdk.Verisoul
 import ai.verisoul.sdk.VerisoulEnvironment
+import ai.verisoul.sdk.helpers.webview.VerisoulSessionCallback
 
-import ai.verisoul.sdk.webview.VerisoulSessionCallback
 import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
