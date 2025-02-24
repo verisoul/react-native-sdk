@@ -1,15 +1,8 @@
-import {
-  View,
-  StyleSheet,
-  Button,
-  PanResponder,
-  Image,
-  Text,
-} from 'react-native';
-import { useEffect, useRef, useState } from 'react';
+import { View, Button, Image, Text, StyleSheet } from 'react-native';
+import { useEffect, useState } from 'react';
 import Verisoul, {
-  MotionAction,
   VerisoulEnvironment,
+  VerisoulTouchRootView,
 } from '@verisoul_ai/react-native-verisoul';
 
 export default function App() {
@@ -29,62 +22,32 @@ export default function App() {
       }
     })();
   }, []);
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-
-      // User touches down
-      onPanResponderGrant: (_, gestureState) => {
-        Verisoul.onTouchEvent(
-          gestureState.x0,
-          gestureState.y0,
-          MotionAction.ACTION_DOWN
-        );
-      },
-
-      // User moves finger on screen
-      onPanResponderMove: (_, gestureState) => {
-        Verisoul.onTouchEvent(
-          gestureState.moveX,
-          gestureState.moveY,
-          MotionAction.ACTION_MOVE
-        );
-      },
-
-      // User lifts finger
-      onPanResponderRelease: (_, gestureState) => {
-        Verisoul.onTouchEvent(
-          gestureState.x0,
-          gestureState.y0,
-          MotionAction.ACTION_UP
-        );
-      },
-    })
-  ).current;
 
   return (
-    <View style={styles.container} {...panResponder.panHandlers}>
-      <View style={styles.imgContainer}>
-        <Image
-          style={styles.img}
-          source={require('../assets/verisoul-logo-light.png')}
+    <VerisoulTouchRootView>
+      <View style={styles.container}>
+        <View style={styles.imgContainer}>
+          <Image
+            style={styles.img}
+            source={require('../assets/verisoul-logo-light.png')}
+          />
+        </View>
+        <Text style={styles.textBoldLarge}>React Native Sample App</Text>
+        <Text style={styles.textNormal}>{`SessionId: ${sessionID}`} </Text>
+
+        <Button
+          onPress={async () => {
+            try {
+              const sessionData = await Verisoul.getSessionID();
+              setSessionID(sessionData);
+            } catch (e) {
+              console.error(e);
+            }
+          }}
+          title="Get Session ID"
         />
       </View>
-      <Text style={styles.textBoldLarge}>React Native Sample App</Text>
-      <Text style={styles.textNormal}>{`SessionId: ${sessionID}`} </Text>
-
-      <Button
-        onPress={async () => {
-          try {
-            const sessionData = await Verisoul.getSessionID();
-            setSessionID(sessionData);
-          } catch (e) {
-            console.error(e);
-          }
-        }}
-        title="Get Session ID"
-      />
-    </View>
+    </VerisoulTouchRootView>
   );
 }
 
