@@ -14,7 +14,6 @@ export const VerisoulTouchRootView = ({
   const handleTouch = (event: GestureResponderEvent, action: MotionAction) => {
     const { locationX, locationY } = event.nativeEvent;
     onTouchEvent(locationX, locationY, action);
-    console.log(action.toString());
   };
   return (
     <View
