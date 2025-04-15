@@ -1,8 +1,10 @@
 import { View, Button, Image, Text, StyleSheet } from 'react-native';
 import { useEffect, useState } from 'react';
+
 import Verisoul, {
   VerisoulEnvironment,
   VerisoulTouchRootView,
+  // @ts-ignore
 } from '@verisoul_ai/react-native-verisoul';
 
 export default function App() {
