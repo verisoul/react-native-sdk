@@ -14,8 +14,8 @@ export default function App() {
     (async () => {
       try {
         await Verisoul.configure({
-          environment: VerisoulEnvironment.production,
-          projectId: '0000-0000-0000-0000',
+          environment: VerisoulEnvironment.sandbox,
+          projectId: '<YOUR_PROJECT_ID>',
         });
         const sessionData = await Verisoul.getSessionID();
         setSessionID(sessionData);

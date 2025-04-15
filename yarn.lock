@@ -4112,7 +4112,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@verisoul_ai/react-native-verisoul@workspace:.":
+"@verisoul_ai/react-native-verisoul@workspace:., @verisoul_ai/react-native-verisoul@workspace:^":
   version: 0.0.0-use.local
   resolution: "@verisoul_ai/react-native-verisoul@workspace:."
   dependencies:
@@ -14270,6 +14270,7 @@ __metadata:
     "@react-native/babel-preset": 0.77.0
     "@react-native/metro-config": 0.77.0
     "@react-native/typescript-config": 0.77.0
+    "@verisoul_ai/react-native-verisoul": "workspace:^"
     react: 18.3.1
     react-native: 0.77.0
     react-native-builder-bob: ^0.37.0
