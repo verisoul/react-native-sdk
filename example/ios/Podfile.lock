@@ -1500,7 +1500,7 @@ PODS:
     - React-perflogger (= 0.77.0)
     - React-utils (= 0.77.0)
   - SocketRocket (0.7.1)
-  - verisoul-reactnative (0.3.1):
+  - verisoul-reactnative (0.3.3):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1805,7 +1805,7 @@ SPEC CHECKSUMS:
   ReactCodegen: c08a5113d9c9c895fe10f3c296f74c6b705a60a9
   ReactCommon: 1bd2dc684d7992acbf0dfee887b89a57a1ead86d
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  verisoul-reactnative: cdb8a64ce2ae2ae2ee4cb32e9bcfb45b0c2a135a
+  verisoul-reactnative: 3506300d0d11a4c5d37382693f90d70a09e194aa
   VerisoulSDK: fbeab6fe8914c3ccb9e927a4ee7dd3a7c07711fb
   Yoga: 78d74e245ed67bb94275a1316cdc170b9b7fe884
 
