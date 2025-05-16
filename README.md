@@ -125,6 +125,12 @@ Wrap your App With `VerisoulTouchRootView`
   // another Views
 </VerisoulTouchRootView>
 ```
+### 4. Reinitialize
+
+Calling `Verisoul.reinitialize()` generates a new `session_id`, which ensures that if a user logs out of one account and into a different account, Verisoul will be able to delineate each account’s data cleanly.
+```dart
+await Verisoul.reinitialize();
+```
 
 ## Android
 

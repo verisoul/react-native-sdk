@@ -5,6 +5,8 @@ import { type NativeModule } from 'react-native';
 export interface NativeVerisoulModule extends NativeModule {
   configure(environment: VerisoulEnvironment, projectId: string): Promise<void>;
 
+  reinitialize(): Promise<void>;
+
   getSessionId(): Promise<string>;
   onActionEvent(x: number, y: number, action: MotionAction): Promise<void>;
 }

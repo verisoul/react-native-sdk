@@ -9,6 +9,9 @@ RCT_EXTERN_METHOD(configure:(NSString *)environment withProjectId:(NSString *)pr
 RCT_EXTERN_METHOD(getSessionId:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(reinitialize:(RCTPromiseResolveBlock)resolve
+                 withRejecter:(RCTPromiseRejectBlock)reject)
+
 + (BOOL)requiresMainQueueSetup
 {
   return NO;

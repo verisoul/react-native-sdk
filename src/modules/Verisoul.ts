@@ -1,10 +1,10 @@
-import type { VerisoulConfig } from '../models/VerisoulConfig';
+import type { VerisoulConfig } from 'verisoul-reactnative';
 import { MotionAction, VerisoulEnvironment } from '../utils/Enums';
 import { NativeVerisoul } from '../native/NativeVerisoul';
 import { Platform } from 'react-native';
 
 /**
- * Retrieves current session's replay link.
+ * Retrieves current session's id.
  *
  * @example
  * ```ts
@@ -13,6 +13,18 @@ import { Platform } from 'react-native';
  */
 export const getSessionID = async (): Promise<string> => {
   return NativeVerisoul.getSessionId();
+};
+
+/**
+ * Creates a new session ID.
+ *
+ * @example
+ * ```ts
+ * Verisoul.reinitialize();
+ * ```
+ */
+export const reinitialize = async (): Promise<void> => {
+  return NativeVerisoul.reinitialize();
 };
 
 /**
