@@ -1,8 +1,10 @@
 import { View, Button, Image, Text, StyleSheet } from 'react-native';
 import { useEffect, useState } from 'react';
+
 import Verisoul, {
   VerisoulEnvironment,
   VerisoulTouchRootView,
+  // @ts-ignore
 } from '@verisoul_ai/react-native-verisoul';
 
 export default function App() {
@@ -12,8 +14,8 @@ export default function App() {
     (async () => {
       try {
         await Verisoul.configure({
-          environment: VerisoulEnvironment.production,
-          projectId: '0000-0000-0000-0000',
+          environment: VerisoulEnvironment.sandbox,
+          projectId: '<YOUR_PROJECT_ID>',
         });
         const sessionData = await Verisoul.getSessionID();
         setSessionID(sessionData);

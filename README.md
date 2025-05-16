@@ -24,13 +24,13 @@ get started.
 #### Using NPM
 
 ```sh
-npm install verisoul-reactnative
+npm install @verisoul_ai/react-native-verisoul
 ```
 
 #### Using Yarn
 
 ```sh
-yarn add verisoul-reactnative
+yarn add @verisoul_ai/react-native-verisoul
 ```
 
 ### EXPO
@@ -62,13 +62,13 @@ npx expo install expo-dev-client
 #### Using NPM
 
 ```sh
-npm install verisoul-reactnative
+npm install @verisoul_ai/react-native-verisoul
 ```
 
 #### Using Yarn
 
 ```sh
-yarn add verisoul-reactnative
+yarn add @verisoul_ai/react-native-verisoul
 ```
 
 4. If an exception occurs during the build stating that the `ai.verisoul:android` package cannot be downloaded, add the
@@ -97,7 +97,7 @@ import Verisoul, {
 
 useEffect(() => {
   Verisoul.configure({
-    environment: VerisoulEnvironment.dev,
+    environment: VerisoulEnvironment.sandbox,
     projectId: 'PROJECT ID',
   });
 }, []);
