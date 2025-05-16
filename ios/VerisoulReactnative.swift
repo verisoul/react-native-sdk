@@ -37,5 +37,16 @@ class VerisoulReactnative: NSObject {
       }
     }
   }
+
+  @MainActor
+  @objc(reinitialize:withRejecter:)  // ✅ Match the Objective-C bridge method
+  func reinitialize(_ resolve: @escaping RCTPromiseResolveBlock,
+                        reject: @escaping RCTPromiseRejectBlock) {
+    Task {
+        Verisoul.shared.reinitialize()
+        resolve(true)
+    }
+  }
+
 }
 

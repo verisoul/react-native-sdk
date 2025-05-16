@@ -48,6 +48,21 @@ export default function App() {
           }}
           title="Get Session ID"
         />
+
+        <View style={styles.btnContainer}>
+          <Button
+            onPress={async () => {
+              try {
+                await Verisoul.reinitialize();
+                const sessionData = await Verisoul.getSessionID();
+                setSessionID(sessionData);
+              } catch (e) {
+                console.error(e);
+              }
+            }}
+            title="reinitialize"
+          />
+        </View>
       </View>
     </VerisoulTouchRootView>
   );
@@ -73,6 +88,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     marginVertical: 10,
+  },
+  btnContainer: {
+    margin: 10,
   },
   textNormal: {
     fontSize: 16,

@@ -57,6 +57,18 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
+  fun reinitialize(promise: Promise) {
+    mainHandler.post {
+      try {
+        Verisoul.reinitialize()
+        promise.resolve(true)
+      } catch (e: Exception) {
+        promise.reject(e)
+      }
+    }
+  }
+
+  @ReactMethod
   fun configure(env: String, productId: String, promise: Promise) {
     mainHandler.post {
       try {
@@ -70,26 +82,26 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-    @ReactMethod
-    fun onActionEvent(x:Float,y:Float,action: Int, promise: Promise) {
+  @ReactMethod
+  fun onActionEvent(x: Float, y: Float, action: Int, promise: Promise) {
 
-        try {
-          val motionEvent = MotionEvent.obtain(
-            System.currentTimeMillis(),
-            System.currentTimeMillis(),
-            action,
-            x,
-            y,
-            0
-          )
-          Verisoul.onTouchEvent(motionEvent)
+    try {
+      val motionEvent = MotionEvent.obtain(
+        System.currentTimeMillis(),
+        System.currentTimeMillis(),
+        action,
+        x,
+        y,
+        0
+      )
+      Verisoul.onTouchEvent(motionEvent)
 
-          promise.resolve(null);
-        } catch (e: Exception) {
-          promise.reject(e);
-        }
-
+      promise.resolve(null);
+    } catch (e: Exception) {
+      promise.reject(e);
     }
+
+  }
 
 
   companion object {
