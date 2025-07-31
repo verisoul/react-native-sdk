@@ -106,7 +106,7 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  api "ai.verisoul:android:0.3.30"
+   api "ai.verisoul:android:0.3.31"
 
 }
 
