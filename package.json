@@ -1,6 +1,6 @@
 {
   "name": "@verisoul_ai/react-native-verisoul",
-  "version": "0.3.40",
+  "version": "0.3.41",
   "description": "Verisoul helps businesses stop fake accounts and fraud",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
