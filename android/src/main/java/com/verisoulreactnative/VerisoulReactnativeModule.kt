@@ -42,7 +42,7 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
     mainHandler.post {
       try {
         Verisoul.getSessionId(object : VerisoulSessionCallback {
-          override fun onFailure(exception: Exception) {
+          override fun onFailure(exception: Throwable) {
             promise.reject(exception)
           }
 
