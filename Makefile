@@ -1,0 +1,30 @@
+.PHONY: bump-android bump-ios release-patch release-minor release-major
+
+bump-android:
+	@chmod +x bump-android-version.sh
+	@./bump-android-version.sh
+
+bump-ios:
+	@chmod +x bump-ios-version.sh
+	@./bump-ios-version.sh
+
+release-patch:
+	@echo "Creating patch release..."
+	@npm version patch
+	@echo ""
+	@echo "Patch release created!"
+	@echo "Next step: git push --follow-tags"
+
+release-minor:
+	@echo "Creating minor release..."
+	@npm version minor
+	@echo ""
+	@echo "Minor release created!"
+	@echo "Next step: git push --follow-tags"
+
+release-major:
+	@echo "Creating major release..."
+	@npm version major
+	@echo ""
+	@echo "Major release created!"
+	@echo "Next step: git push --follow-tags"

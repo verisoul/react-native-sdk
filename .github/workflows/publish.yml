@@ -1,0 +1,82 @@
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Get tag version
+        id: get_tag
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          VERSION=${TAG#v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Publishing version: $VERSION"
+
+      - name: Validate package.json version
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          TAG_VERSION="${{ steps.get_tag.outputs.version }}"
+
+          echo "Package version: $PACKAGE_VERSION"
+          echo "Tag version: $TAG_VERSION"
+
+          if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
+            echo "Error: Version mismatch!"
+            echo "package.json version ($PACKAGE_VERSION) must match tag version ($TAG_VERSION)"
+            exit 1
+          fi
+
+          echo "Versions match"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build library
+        run: yarn prepare
+
+      - name: Run tests
+        run: yarn test
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Type check
+        run: yarn typecheck
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish Summary
+        run: |
+          echo "============================================"
+          echo "Published Successfully!"
+          echo "============================================"
+          echo ""
+          echo "Package: @verisoul_ai/react-native-verisoul"
+          echo "Version: ${{ steps.get_tag.outputs.version }}"
+          echo ""
+          echo "Install with:"
+          echo "npm install @verisoul_ai/react-native-verisoul@${{ steps.get_tag.outputs.version }}"
+          echo "yarn add @verisoul_ai/react-native-verisoul@${{ steps.get_tag.outputs.version }}"
+          echo "============================================"
