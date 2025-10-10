@@ -1,12 +1,12 @@
 .PHONY: bump-android bump-ios release-patch release-minor release-major
 
 bump-android:
-	@chmod +x bump-android-version.sh
-	@./bump-android-version.sh
+	@chmod +x scripts/bump-android-version.sh
+	@./scripts/bump-android-version.sh
 
 bump-ios:
-	@chmod +x bump-ios-version.sh
-	@./bump-ios-version.sh
+	@chmod +x scripts/bump-ios-version.sh
+	@./scripts/bump-ios-version.sh
 
 release-patch:
 	@echo "Creating patch release..."
