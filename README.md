@@ -240,9 +240,28 @@ Update your app’s entitlements file:
 
 ```
 
+## Releasing
+
+The release process is fully automated via GitHub Actions. Follow these steps:
+
+### 1. Bump Native Platform Versions
+
+```bash
+make bump-android    # Updates Android SDK version
+make bump-ios        # Updates iOS SDK version
+```
+
+### 2. Bump React Native Package Version
+
+```bash
+make release-patch    # 0.4.4 → 0.4.5
+make release-minor    # 0.4.4 → 0.5.0
+make release-major    # 0.4.4 → 1.0.0
+```
+**Note:** Publishing uses OIDC authentication (no manual secrets required).
+
 ## Questions and Feedback
 
 Comprehensive documentation about Verisoul's Android SDK and API can be found
 at [docs.verisoul.ai](https://docs.verisoul.ai/). Additionally, reach out to Verisoul
 at [help@verisoul.ai](mailto:help@verisoul.ai) for any questions or feedback.
-
