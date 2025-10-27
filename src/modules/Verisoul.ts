@@ -3,8 +3,15 @@ import { MotionAction, VerisoulEnvironment } from '../utils/Enums';
 import { NativeVerisoul } from '../native/NativeVerisoul';
 import { Platform } from 'react-native';
 
+// In-memory cache for session ID (valid for 24 hours)
+let cachedSessionId: string | null = null;
+// Promise deduplication for concurrent calls
+let sessionPromise: Promise<string> | null = null;
+
 /**
  * Retrieves current session's id.
+ * Uses in memory cache to avoid unnecessary native calls.
+ * Deduplicates concurrent calls to prevent race conditions.
  *
  * @example
  * ```ts
@@ -12,7 +19,21 @@ import { Platform } from 'react-native';
  * ```
  */
 export const getSessionID = async (): Promise<string> => {
-  return NativeVerisoul.getSessionId();
+  if (cachedSessionId) {
+    return cachedSessionId;
+  }
+
+  if (sessionPromise) {
+    return sessionPromise;
+  }
+
+  sessionPromise = NativeVerisoul.getSessionId();
+  try {
+    cachedSessionId = await sessionPromise;
+    return cachedSessionId;
+  } finally {
+    sessionPromise = null;
+  }
 };
 
 /**
@@ -24,6 +45,8 @@ export const getSessionID = async (): Promise<string> => {
  * ```
  */
 export const reinitialize = async (): Promise<void> => {
+  cachedSessionId = null;
+  sessionPromise = null;
   return NativeVerisoul.reinitialize();
 };
 

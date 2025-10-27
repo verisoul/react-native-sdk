@@ -24,7 +24,6 @@ class VerisoulReactnative: NSObject {
     resolve("Configuration successful")
   }
 
-  @MainActor
   @objc(getSessionId:withRejecter:)  // ✅ Match the Objective-C bridge method
   func getSessionId(_ resolve: @escaping RCTPromiseResolveBlock,
                         reject: @escaping RCTPromiseRejectBlock) {
@@ -38,7 +37,6 @@ class VerisoulReactnative: NSObject {
     }
   }
 
-  @MainActor
   @objc(reinitialize:withRejecter:)  // ✅ Match the Objective-C bridge method
   func reinitialize(_ resolve: @escaping RCTPromiseResolveBlock,
                         reject: @escaping RCTPromiseRejectBlock) {
