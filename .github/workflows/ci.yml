@@ -161,7 +161,12 @@ jobs:
           pod install
         env:
           NO_FLIPPER: 1
+      - name: Ensure NODE_BINARY for Xcode
+        run: echo "NODE_BINARY=$(command -v node)" >> $GITHUB_ENV
 
       - name: Build example for iOS
+        env:
+          NODE_BINARY: ${{ env.NODE_BINARY }}
+          RCT_NO_XCBEAUTIFY: 1
         run: |
           yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
