@@ -1,4 +1,4 @@
-.PHONY: bump-android bump-ios release-patch release-minor release-major
+.PHONY: bump-android bump-ios release-patch release-minor release-major release-beta-patch release-beta-increment
 
 bump-android:
 	@chmod +x scripts/bump-android-version.sh
@@ -27,4 +27,18 @@ release-major:
 	@npm version major
 	@echo ""
 	@echo "Major release created!"
+	@echo "Next step: git push --follow-tags"
+
+release-beta-patch:
+	@echo "Creating beta patch release..."
+	@npm version prepatch --preid=beta
+	@echo ""
+	@echo "Beta patch release created!"
+	@echo "Next step: git push --follow-tags"
+
+release-beta-increment:
+	@echo "Incrementing beta version..."
+	@npm version prerelease --preid=beta
+	@echo ""
+	@echo "Beta version incremented!"
 	@echo "Next step: git push --follow-tags"

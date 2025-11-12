@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
     "rootDir": ".",
+    "baseUrl": ".",
     "paths": {
-      "verisoul-reactnative": ["./src/index"]
+      "verisoul-reactnative": ["./src/index"],
+      "@verisoul_ai/react-native-verisoul": ["./src/index"],
+      "@verisoul_ai/react-native-verisoul/*": ["./src/*"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

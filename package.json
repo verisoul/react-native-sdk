@@ -56,14 +56,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/verisoul/rn-sdk2.git.git"
+    "url": "git+https://github.com/verisoul/react-native-sdk.git.git"
   },
-  "author": "Verisoul <hello@verisoul.ai> (https://github.com/verisoul/rn-sdk2.git)",
+  "author": "Verisoul <hello@verisoul.ai> (https://github.com/verisoul/react-native-sdk.git)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/verisoul/rn-sdk2.git/issues"
+    "url": "https://github.com/verisoul/react-native-sdk.git/issues"
   },
-  "homepage": "https://github.com/verisoul/rn-sdk2.git#readme",
+  "homepage": "https://github.com/verisoul/react-native-sdk.git#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
