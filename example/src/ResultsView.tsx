@@ -160,7 +160,7 @@ const ResultsView: React.FC<ResultsViewProps> = ({
             </>
           ) : (
             <>
-              <Text style={[styles.summaryTitle, { color: '#FF9500' }]}>
+              <Text style={styles.summaryTitleWarning}>
                 ⚠️ Some Tests Failed
               </Text>
               <Text style={styles.summaryText}>
@@ -284,6 +284,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '600',
     color: '#28a745',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  summaryTitleWarning: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#FF9500',
     marginBottom: 10,
     textAlign: 'center',
   },
