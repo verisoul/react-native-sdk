@@ -10,6 +10,8 @@ import {
   Modal,
   SafeAreaView,
   Switch,
+  Linking,
+  Platform,
 } from 'react-native';
 import Verisoul, {
   VerisoulEnvironment,
@@ -17,6 +19,12 @@ import Verisoul, {
 } from '@verisoul_ai/react-native-verisoul';
 import { runRepeatTest, runChaosTest, type TestResults } from './testHarness';
 import ResultsView from './ResultsView';
+
+enum SDKStatus {
+  LOADING = 'loading',
+  SUCCESS = 'success',
+  FAILED = 'failed',
+}
 
 export default function App() {
   // Test state
@@ -33,20 +41,29 @@ export default function App() {
   // Chaos Test Config
   const [chaosRounds, setChaosRounds] = useState('40');
 
+  // SDK configuration state
+  const [sdkStatus, setSdkStatus] = useState<SDKStatus>(SDKStatus.LOADING);
+
+  const configureSDK = async () => {
+    setSdkStatus(SDKStatus.LOADING);
+    try {
+      await Verisoul.configure({
+        environment: VerisoulEnvironment.dev,
+        projectId: '00000000-0000-0000-0000-000000000001',
+      });
+      console.log('Verisoul SDK configured successfully');
+      setSdkStatus(SDKStatus.SUCCESS);
+    } catch (error: any) {
+      console.error('Failed to configure Verisoul SDK:', error);
+      setSdkStatus(SDKStatus.FAILED);
+    }
+  };
+
   useEffect(() => {
-    // Configure SDK on app launch
-    (async () => {
-      try {
-        await Verisoul.configure({
-          environment: VerisoulEnvironment.dev,
-          projectId: '00000000-0000-0000-0000-000000000001',
-        });
-        console.log('Verisoul SDK configured successfully');
-      } catch (error) {
-        console.error('Failed to configure Verisoul SDK:', error);
-      }
-    })();
+    configureSDK();
   }, []);
+
+  const isDisabled = sdkStatus !== SDKStatus.SUCCESS || isRunning;
 
   const handleRepeatTest = async () => {
     setIsRunning(true);
@@ -82,8 +99,42 @@ export default function App() {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.headerIcon}>🛡️</Text>
             <Text style={styles.headerTitle}>Verisoul SDK Test Suite</Text>
+          </View>
+
+          {/* SDK Status */}
+          <View style={styles.statusContainer}>
+            {sdkStatus === SDKStatus.FAILED ? (
+              <>
+                <Text style={styles.statusError}>SDK Configuration Failed</Text>
+                {Platform.OS === 'android' && (
+                  <View style={styles.buttonRow}>
+                    <TouchableOpacity
+                      style={styles.installButton}
+                      onPress={() =>
+                        Linking.openURL(
+                          'market://details?id=com.google.android.webview'
+                        )
+                      }
+                    >
+                      <Text style={styles.installButtonText}>
+                        Install WebView
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.retryButton}
+                      onPress={configureSDK}
+                    >
+                      <Text style={styles.retryButtonText}>Retry</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </>
+            ) : sdkStatus === SDKStatus.SUCCESS ? (
+              <Text style={styles.statusSuccess}>SDK Configured</Text>
+            ) : (
+              <Text style={styles.statusLoading}>Configuring SDK...</Text>
+            )}
           </View>
 
           <View style={styles.divider} />
@@ -139,10 +190,10 @@ export default function App() {
               style={[
                 styles.button,
                 styles.blueButton,
-                isRunning && styles.disabledButton,
+                isDisabled && styles.disabledButton,
               ]}
               onPress={handleRepeatTest}
-              disabled={isRunning}
+              disabled={isDisabled}
             >
               <Text style={styles.buttonText}>🔁 Run Repeat Test</Text>
             </TouchableOpacity>
@@ -175,10 +226,10 @@ export default function App() {
               style={[
                 styles.button,
                 styles.orangeButton,
-                isRunning && styles.disabledButton,
+                isDisabled && styles.disabledButton,
               ]}
               onPress={handleChaosTest}
-              disabled={isRunning}
+              disabled={isDisabled}
             >
               <Text style={styles.buttonText}>🌪️ Run Chaos Test</Text>
             </TouchableOpacity>
@@ -242,6 +293,49 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#ddd',
     marginVertical: 20,
+  },
+  statusContainer: {
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  statusSuccess: {
+    fontSize: 14,
+    color: '#060',
+  },
+  statusError: {
+    fontSize: 14,
+    color: '#c00',
+    marginBottom: 10,
+  },
+  statusLoading: {
+    fontSize: 14,
+    color: '#666',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  installButton: {
+    backgroundColor: '#007AFF',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginTop: 5,
+  },
+  installButtonText: {
+    color: '#fff',
+    fontSize: 14,
+  },
+  retryButton: {
+    backgroundColor: '#34C759',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginTop: 5,
+  },
+  retryButtonText: {
+    color: '#fff',
+    fontSize: 14,
   },
   section: {
     marginBottom: 20,
