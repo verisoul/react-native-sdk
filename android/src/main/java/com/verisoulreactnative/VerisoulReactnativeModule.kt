@@ -7,6 +7,7 @@ import ai.verisoul.sdk.helpers.webview.VerisoulSessionCallback
 import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
+import android.webkit.WebView
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -36,6 +37,17 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
   }
 
   private val mainHandler = Handler(Looper.getMainLooper())
+
+  private fun checkWebViewAvailability(): Boolean {
+    return try {
+      val webView = WebView(reactApplicationContext)
+      webView.destroy()
+      true
+    } catch (e: Exception) {
+      // WebView is not available, disabled, or corrupted
+      false
+    }
+  }
 
   @ReactMethod
   fun getSessionId(promise: Promise) {
@@ -72,6 +84,11 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
   fun configure(env: String, productId: String, promise: Promise) {
     mainHandler.post {
       try {
+        if (!checkWebViewAvailability()) {
+          promise.reject(VerisoulErrorCodes.WEBVIEW_UNAVAILABLE, "WebView is not available on this device")
+          return@post
+        }
+
         val logLevel =
           sdkLogLevels[env] ?: throw IllegalArgumentException("Invalid environment: $env")
         Verisoul.init(reactApplicationContext, logLevel, productId)
