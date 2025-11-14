@@ -16,7 +16,7 @@ class VerisoulReactnative: NSObject {
                  withResolver resolve: @escaping RCTPromiseResolveBlock,
                  withRejecter reject: @escaping RCTPromiseRejectBlock) {
     guard let env = VerisoulReactnative.sdkLogLevels[environment] else {
-      reject("INVALID_ENV", "Invalid environment value: \(environment)", nil)
+      reject(VerisoulErrorCodes.INVALID_ENVIRONMENT, "Invalid environment value: \(environment)", nil)
       return
     }
 
@@ -32,7 +32,7 @@ class VerisoulReactnative: NSObject {
         let sessionId = try await Verisoul.shared.session()
         resolve(sessionId)
       } catch {
-        reject("0", "Failed to retrieve session ID: \(error.localizedDescription)", error)
+        reject(VerisoulErrorCodes.SESSION_UNAVAILABLE, "Failed to retrieve session ID: \(error.localizedDescription)", error)
       }
     }
   }

@@ -10,8 +10,6 @@ import {
   Modal,
   SafeAreaView,
   Switch,
-  Linking,
-  Platform,
 } from 'react-native';
 import Verisoul, {
   VerisoulEnvironment,
@@ -54,7 +52,10 @@ export default function App() {
       console.log('Verisoul SDK configured successfully');
       setSdkStatus(SDKStatus.SUCCESS);
     } catch (error: any) {
-      console.error('Failed to configure Verisoul SDK:', error);
+      console.error('Failed to configure Verisoul SDK:', {
+        code: error?.code,
+        message: error?.message,
+      });
       setSdkStatus(SDKStatus.FAILED);
     }
   };
@@ -105,31 +106,7 @@ export default function App() {
           {/* SDK Status */}
           <View style={styles.statusContainer}>
             {sdkStatus === SDKStatus.FAILED ? (
-              <>
-                <Text style={styles.statusError}>SDK Configuration Failed</Text>
-                {Platform.OS === 'android' && (
-                  <View style={styles.buttonRow}>
-                    <TouchableOpacity
-                      style={styles.installButton}
-                      onPress={() =>
-                        Linking.openURL(
-                          'market://details?id=com.google.android.webview'
-                        )
-                      }
-                    >
-                      <Text style={styles.installButtonText}>
-                        Install WebView
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.retryButton}
-                      onPress={configureSDK}
-                    >
-                      <Text style={styles.retryButtonText}>Retry</Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </>
+              <Text style={styles.statusError}>SDK Configuration Failed</Text>
             ) : sdkStatus === SDKStatus.SUCCESS ? (
               <Text style={styles.statusSuccess}>SDK Configured</Text>
             ) : (
@@ -310,32 +287,6 @@ const styles = StyleSheet.create({
   statusLoading: {
     fontSize: 14,
     color: '#666',
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  installButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 5,
-    marginTop: 5,
-  },
-  installButtonText: {
-    color: '#fff',
-    fontSize: 14,
-  },
-  retryButton: {
-    backgroundColor: '#34C759',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 5,
-    marginTop: 5,
-  },
-  retryButtonText: {
-    color: '#fff',
-    fontSize: 14,
   },
   section: {
     marginBottom: 20,

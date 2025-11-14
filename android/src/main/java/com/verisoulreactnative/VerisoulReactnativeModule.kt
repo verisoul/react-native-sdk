@@ -38,11 +38,13 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
 
   private val mainHandler = Handler(Looper.getMainLooper())
 
-
   private fun checkWebViewAvailability(): Boolean {
     return try {
-      WebView.getCurrentWebViewPackage() != null
+      val webView = WebView(reactApplicationContext)
+      webView.destroy()
+      true
     } catch (e: Exception) {
+      // WebView is not available, disabled, or corrupted
       false
     }
   }
@@ -83,7 +85,7 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
     mainHandler.post {
       try {
         if (!checkWebViewAvailability()) {
-          promise.reject(Exception("WebView not available"))
+          promise.reject(VerisoulErrorCodes.WEBVIEW_UNAVAILABLE, "WebView is not available on this device")
           return@post
         }
 
