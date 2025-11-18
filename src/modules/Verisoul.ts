@@ -34,7 +34,7 @@ export const reinitialize = async (): Promise<void> => {
  * @param config SDK configurations. See {@link VerisoulConfig} for more info.
  */
 export const configure = async (config: VerisoulConfig): Promise<void> => {
-  return NativeVerisoul.configure(
+  return await NativeVerisoul.configure(
     config.environment ?? VerisoulEnvironment.dev,
     config.projectId
   );

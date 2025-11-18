@@ -7,6 +7,7 @@ import ai.verisoul.sdk.helpers.webview.VerisoulSessionCallback
 import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
+import android.webkit.WebView
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -37,13 +38,24 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
 
   private val mainHandler = Handler(Looper.getMainLooper())
 
+  private fun checkWebViewAvailability(): Boolean {
+    return try {
+      val webView = WebView(reactApplicationContext)
+      webView.destroy()
+      true
+    } catch (e: Exception) {
+      // WebView is not available, disabled, or corrupted
+      false
+    }
+  }
+
   @ReactMethod
   fun getSessionId(promise: Promise) {
     mainHandler.post {
       try {
         Verisoul.getSessionId(object : VerisoulSessionCallback {
           override fun onFailure(exception: Throwable) {
-            promise.reject(exception)
+            promise.reject(VerisoulErrorCodes.SESSION_UNAVAILABLE, "Failed to retrieve session ID: ${exception.message}", exception)
           }
 
           override fun onSuccess(sessionId: String) {
@@ -51,7 +63,7 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
           }
         })
       } catch (e: Exception) {
-        promise.reject(e)
+        promise.reject(VerisoulErrorCodes.SESSION_UNAVAILABLE, "Failed to retrieve session ID: ${e.message}", e)
       }
     }
   }
@@ -63,7 +75,7 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
         Verisoul.reinitialize()
         promise.resolve(true)
       } catch (e: Exception) {
-        promise.reject(e)
+        promise.reject(VerisoulErrorCodes.SDK_ERROR, "Failed to reinitialize SDK: ${e.message}", e)
       }
     }
   }
@@ -72,12 +84,21 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
   fun configure(env: String, productId: String, promise: Promise) {
     mainHandler.post {
       try {
-        val logLevel =
-          sdkLogLevels[env] ?: throw IllegalArgumentException("Invalid environment: $env")
+        if (!checkWebViewAvailability()) {
+          promise.reject(VerisoulErrorCodes.WEBVIEW_UNAVAILABLE, "WebView is not available on this device")
+          return@post
+        }
+
+        val logLevel = sdkLogLevels[env]
+        if (logLevel == null) {
+          promise.reject(VerisoulErrorCodes.INVALID_ENVIRONMENT, "Invalid environment value: $env")
+          return@post
+        }
+        
         Verisoul.init(reactApplicationContext, logLevel, productId)
         promise.resolve(true)
       } catch (e: Exception) {
-        promise.reject(e)
+        promise.reject(VerisoulErrorCodes.SDK_ERROR, "SDK configuration failed: ${e.message}", e)
       }
     }
   }

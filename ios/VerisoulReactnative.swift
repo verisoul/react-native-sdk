@@ -16,12 +16,16 @@ class VerisoulReactnative: NSObject {
                  withResolver resolve: @escaping RCTPromiseResolveBlock,
                  withRejecter reject: @escaping RCTPromiseRejectBlock) {
     guard let env = VerisoulReactnative.sdkLogLevels[environment] else {
-      reject("INVALID_ENV", "Invalid environment value: \(environment)", nil)
+      reject(VerisoulErrorCodes.INVALID_ENVIRONMENT, "Invalid environment value: \(environment)", nil)
       return
     }
 
-    Verisoul.shared.configure(env: env, projectId: projectId)
-    resolve("Configuration successful")
+    do {
+      try Verisoul.shared.configure(env: env, projectId: projectId)
+      resolve("Configuration successful")
+    } catch {
+      reject(VerisoulErrorCodes.SDK_ERROR, "SDK configuration failed: \(error.localizedDescription)", error)
+    }
   }
 
   @objc(getSessionId:withRejecter:)  // ✅ Match the Objective-C bridge method
@@ -32,7 +36,7 @@ class VerisoulReactnative: NSObject {
         let sessionId = try await Verisoul.shared.session()
         resolve(sessionId)
       } catch {
-        reject("0", "Failed to retrieve session ID: \(error.localizedDescription)", error)
+        reject(VerisoulErrorCodes.SESSION_UNAVAILABLE, "Failed to retrieve session ID: \(error.localizedDescription)", error)
       }
     }
   }
