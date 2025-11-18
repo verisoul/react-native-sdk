@@ -20,8 +20,12 @@ class VerisoulReactnative: NSObject {
       return
     }
 
-    Verisoul.shared.configure(env: env, projectId: projectId)
-    resolve("Configuration successful")
+    do {
+      try Verisoul.shared.configure(env: env, projectId: projectId)
+      resolve("Configuration successful")
+    } catch {
+      reject(VerisoulErrorCodes.SDK_ERROR, "SDK configuration failed: \(error.localizedDescription)", error)
+    }
   }
 
   @objc(getSessionId:withRejecter:)  // ✅ Match the Objective-C bridge method
