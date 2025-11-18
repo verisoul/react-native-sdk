@@ -87,15 +87,30 @@ We use [TypeScript](https://www.typescriptlang.org/) for type checking, [ESLint]
 
 Our pre-commit hooks verify that the linter and tests pass when committing.
 
-### Publishing to npm
+### Releasing
 
-We use [release-it](https://github.com/release-it/release-it) to make it easier to publish new versions. It handles common tasks like bumping version based on semver, creating tags and releases etc.
+The release process is fully automated via GitHub Actions. Follow these steps:
 
-To publish new versions, run the following:
+#### 1. Bump Native Platform Versions
 
-```sh
-yarn release
+Update the Android and iOS SDK versions as needed:
+
+```bash
+make bump-android    # Updates Android SDK version
+make bump-ios        # Updates iOS SDK version
 ```
+
+#### 2. Bump React Native Package Version
+
+Use semantic versioning to release a new version:
+
+```bash
+make release-patch    # 0.4.4 → 0.4.5
+make release-minor    # 0.4.4 → 0.5.0
+make release-major    # 0.4.4 → 1.0.0
+```
+
+**Note:** Publishing uses OIDC authentication (no manual secrets required).
 
 ### Scripts
 
