@@ -17,11 +17,6 @@ object VerisoulErrorCodes {
     const val SESSION_UNAVAILABLE = "SESSION_UNAVAILABLE"
     
     /**
-     * SDK configuration failed
-     */
-    const val SDK_ERROR = "SDK_ERROR"
-    
-    /**
      * Invalid environment parameter
      */
     const val INVALID_ENVIRONMENT = "INVALID_ENVIRONMENT"

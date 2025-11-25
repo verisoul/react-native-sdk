@@ -24,7 +24,7 @@ class VerisoulReactnative: NSObject {
       try Verisoul.shared.configure(env: env, projectId: projectId)
       resolve("Configuration successful")
     } catch {
-      reject(VerisoulErrorCodes.SDK_ERROR, "SDK configuration failed: \(error.localizedDescription)", error)
+      reject("UNKNOWN_ERROR", "SDK configuration failed: \(error.localizedDescription)", error)
     }
   }
 

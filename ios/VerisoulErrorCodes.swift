@@ -17,11 +17,6 @@ import Foundation
     @objc public static let SESSION_UNAVAILABLE = "SESSION_UNAVAILABLE"
     
     /**
-     * SDK configuration failed
-     */
-    @objc public static let SDK_ERROR = "SDK_ERROR"
-    
-    /**
      * Invalid environment parameter
      */
     @objc public static let INVALID_ENVIRONMENT = "INVALID_ENVIRONMENT"

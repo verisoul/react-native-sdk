@@ -14,11 +14,6 @@ export const VerisoulErrorCodes = {
   SESSION_UNAVAILABLE: 'SESSION_UNAVAILABLE',
 
   /**
-   * SDK configuration failed
-   */
-  SDK_ERROR: 'SDK_ERROR',
-
-  /**
    * Invalid environment parameter
    */
   INVALID_ENVIRONMENT: 'INVALID_ENVIRONMENT',

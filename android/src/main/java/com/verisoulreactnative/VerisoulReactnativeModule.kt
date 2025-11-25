@@ -7,7 +7,6 @@ import ai.verisoul.sdk.helpers.webview.VerisoulSessionCallback
 import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
-import android.webkit.WebView
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -38,17 +37,6 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
 
   private val mainHandler = Handler(Looper.getMainLooper())
 
-  private fun checkWebViewAvailability(): Boolean {
-    return try {
-      val webView = WebView(reactApplicationContext)
-      webView.destroy()
-      true
-    } catch (e: Exception) {
-      // WebView is not available, disabled, or corrupted
-      false
-    }
-  }
-
   @ReactMethod
   fun getSessionId(promise: Promise) {
     mainHandler.post {
@@ -75,7 +63,7 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
         Verisoul.reinitialize()
         promise.resolve(true)
       } catch (e: Exception) {
-        promise.reject(VerisoulErrorCodes.SDK_ERROR, "Failed to reinitialize SDK: ${e.message}", e)
+        promise.reject("UNKNOWN_ERROR", "Failed to reinitialize SDK: ${e.message}", e)
       }
     }
   }
@@ -84,11 +72,6 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
   fun configure(env: String, productId: String, promise: Promise) {
     mainHandler.post {
       try {
-        if (!checkWebViewAvailability()) {
-          promise.reject(VerisoulErrorCodes.WEBVIEW_UNAVAILABLE, "WebView is not available on this device")
-          return@post
-        }
-
         val logLevel = sdkLogLevels[env]
         if (logLevel == null) {
           promise.reject(VerisoulErrorCodes.INVALID_ENVIRONMENT, "Invalid environment value: $env")
@@ -98,7 +81,7 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
         Verisoul.init(reactApplicationContext, logLevel, productId)
         promise.resolve(true)
       } catch (e: Exception) {
-        promise.reject(VerisoulErrorCodes.SDK_ERROR, "SDK configuration failed: ${e.message}", e)
+        promise.reject("UNKNOWN_ERROR", "SDK configuration failed: ${e.message}", e)
       }
     }
   }
