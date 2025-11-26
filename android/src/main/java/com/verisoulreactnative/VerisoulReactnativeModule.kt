@@ -66,7 +66,8 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
         Verisoul.reinitialize()
         promise.resolve(true)
       } catch (e: Exception) {
-        promise.reject("UNKNOWN_ERROR", "Failed to reinitialize SDK: ${e.message}", e)
+        val errorCode = (e as? VerisoulException)?.code ?: "UNKNOWN_ERROR"
+        promise.reject(errorCode, "Failed to reinitialize SDK: ${e.message}", e)
       }
     }
   }
@@ -84,7 +85,8 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
         Verisoul.init(reactApplicationContext, logLevel, productId)
         promise.resolve(true)
       } catch (e: Exception) {
-        promise.reject("UNKNOWN_ERROR", "SDK configuration failed: ${e.message}", e)
+        val errorCode = (e as? VerisoulException)?.code ?: "UNKNOWN_ERROR"
+        promise.reject(errorCode, "SDK configuration failed: ${e.message}", e)
       }
     }
   }
