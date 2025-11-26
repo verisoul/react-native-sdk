@@ -23,12 +23,23 @@ class VerisoulReactnative: NSObject {
     do {
       try Verisoul.shared.configure(env: env, projectId: projectId)
       resolve("Configuration successful")
-    } catch let error as VerisoulSDK.VerisoulException {
-      // Preserve native SDK's error code
-      reject(error.errorCode, "SDK configuration failed: \(error.localizedDescription)", error)
     } catch {
-      reject("UNKNOWN_ERROR", "SDK configuration failed: \(error.localizedDescription)", error)
+      // Extract error code if available from the error
+      let errorCode = extractErrorCode(from: error) ?? "UNKNOWN_ERROR"
+      reject(errorCode, "SDK configuration failed: \(error.localizedDescription)", error)
     }
+  }
+  
+  /// Extracts the error code from a Verisoul SDK error
+  private func extractErrorCode(from error: Error) -> String? {
+    // Check if the error description contains known error codes
+    let errorDescription = error.localizedDescription.uppercased()
+    if errorDescription.contains("WEBVIEW") {
+      return VerisoulErrorCodes.WEBVIEW_UNAVAILABLE
+    } else if errorDescription.contains("SESSION") {
+      return VerisoulErrorCodes.SESSION_UNAVAILABLE
+    }
+    return nil
   }
 
   @objc(getSessionId:withRejecter:)  // ✅ Match the Objective-C bridge method
@@ -38,11 +49,10 @@ class VerisoulReactnative: NSObject {
       do {
         let sessionId = try await Verisoul.shared.session()
         resolve(sessionId)
-      } catch let error as VerisoulSDK.VerisoulException {
-        // Preserve native SDK's error code
-        reject(error.errorCode, "Failed to retrieve session ID: \(error.localizedDescription)", error)
       } catch {
-        reject(VerisoulErrorCodes.SESSION_UNAVAILABLE, "Failed to retrieve session ID: \(error.localizedDescription)", error)
+        // Extract error code if available, otherwise use SESSION_UNAVAILABLE
+        let errorCode = extractErrorCode(from: error) ?? VerisoulErrorCodes.SESSION_UNAVAILABLE
+        reject(errorCode, "Failed to retrieve session ID: \(error.localizedDescription)", error)
       }
     }
   }

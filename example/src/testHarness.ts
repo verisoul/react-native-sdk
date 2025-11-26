@@ -1,4 +1,20 @@
 import Verisoul from '@verisoul_ai/react-native-verisoul';
+import { VERISOUL_ENV, VERISOUL_API_KEY } from '@env';
+
+// Get API base URL based on environment
+const getApiBaseUrl = (env: string): string => {
+  switch (env?.toLowerCase()) {
+    case 'production':
+      return 'https://api.verisoul.ai';
+    case 'sandbox':
+      return 'https://api.sandbox.verisoul.ai';
+    case 'staging':
+      return 'https://api.staging.verisoul.ai';
+    case 'dev':
+    default:
+      return 'https://api.dev.verisoul.ai';
+  }
+};
 
 export interface TestResults {
   successCount: number;
@@ -57,20 +73,18 @@ const reinitAndGet = async (): Promise<string> => {
 // Call authenticate API
 const callAuthenticate = async (sid: string): Promise<boolean> => {
   try {
-    const response = await fetch(
-      'https://api.dev.verisoul.ai/session/authenticate',
-      {
-        method: 'POST',
-        headers: {
-          'x-api-key': '<API_KEY>',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          account: { id: `test-${sid}` },
-          session_id: sid,
-        }),
-      }
-    );
+    const baseUrl = getApiBaseUrl(VERISOUL_ENV);
+    const response = await fetch(`${baseUrl}/session/authenticate`, {
+      method: 'POST',
+      headers: {
+        'x-api-key': VERISOUL_API_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        account: { id: `test-${sid}` },
+        session_id: sid,
+      }),
+    });
     return response.status === 200;
   } catch (error) {
     return false; // network / TLS failure counts as "FAIL"

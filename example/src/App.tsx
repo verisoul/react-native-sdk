@@ -17,11 +17,32 @@ import Verisoul, {
 } from '@verisoul_ai/react-native-verisoul';
 import { runRepeatTest, runChaosTest, type TestResults } from './testHarness';
 import ResultsView from './ResultsView';
+import { VERISOUL_ENV, VERISOUL_PROJECT_ID } from '@env';
+
+// Map env string to VerisoulEnvironment
+const getEnvironment = (env: string): VerisoulEnvironment => {
+  switch (env?.toLowerCase()) {
+    case 'production':
+      return VerisoulEnvironment.production;
+    case 'sandbox':
+      return VerisoulEnvironment.sandbox;
+    case 'staging':
+      return VerisoulEnvironment.staging;
+    case 'dev':
+    default:
+      return VerisoulEnvironment.dev;
+  }
+};
 
 enum SDKStatus {
   LOADING = 'loading',
   SUCCESS = 'success',
   FAILED = 'failed',
+}
+
+interface ConfigError {
+  code: string | undefined;
+  message: string | undefined;
 }
 
 export default function App() {
@@ -41,21 +62,53 @@ export default function App() {
 
   // SDK configuration state
   const [sdkStatus, setSdkStatus] = useState<SDKStatus>(SDKStatus.LOADING);
+  const [configError, setConfigError] = useState<ConfigError | null>(null);
+
+  // Network unavailable test state
+  const [networkTestRunning, setNetworkTestRunning] = useState(false);
+  const [networkTestResult, setNetworkTestResult] = useState<{
+    status: 'idle' | 'running' | 'passed' | 'failed';
+    expectedCode: string;
+    actualCode: string | undefined;
+    message: string | undefined;
+    duration: number | undefined;
+  } | null>(null);
 
   const configureSDK = async () => {
     setSdkStatus(SDKStatus.LOADING);
+    setConfigError(null);
     try {
       await Verisoul.configure({
-        environment: VerisoulEnvironment.dev,
-        projectId: '00000000-0000-0000-0000-000000000001',
+        environment: getEnvironment(VERISOUL_ENV),
+        projectId: VERISOUL_PROJECT_ID,
       });
       console.log('Verisoul SDK configured successfully');
-      setSdkStatus(SDKStatus.SUCCESS);
+
+      // Reinitialize to clear any cached session and force new WebView creation
+      // This will surface errors like WEBVIEW_UNAVAILABLE
+      try {
+        console.log('Reinitializing SDK to verify WebView availability...');
+        await Verisoul.reinitialize();
+        console.log('Getting fresh session ID...');
+        const sessionId = await Verisoul.getSessionID();
+        console.log('Session ID obtained:', sessionId.substring(0, 8) + '...');
+        setSdkStatus(SDKStatus.SUCCESS);
+      } catch (sessionError: any) {
+        const errorInfo = {
+          code: sessionError?.code,
+          message: sessionError?.message,
+        };
+        console.error('SDK verification failed:', errorInfo);
+        setConfigError(errorInfo);
+        setSdkStatus(SDKStatus.FAILED);
+      }
     } catch (error: any) {
-      console.error('Failed to configure Verisoul SDK:', {
+      const errorInfo = {
         code: error?.code,
         message: error?.message,
-      });
+      };
+      console.error('Failed to configure Verisoul SDK:', errorInfo);
+      setConfigError(errorInfo);
       setSdkStatus(SDKStatus.FAILED);
     }
   };
@@ -94,6 +147,62 @@ export default function App() {
     setShowResults(true);
   };
 
+  const handleNetworkUnavailableTest = async () => {
+    setNetworkTestRunning(true);
+    setNetworkTestResult({
+      status: 'running',
+      expectedCode: 'SESSION_UNAVAILABLE',
+      actualCode: undefined,
+      message: 'Test in progress... This may take up to 2 minutes.',
+      duration: undefined,
+    });
+
+    const startTime = Date.now();
+
+    try {
+      console.log('[Network Test] Starting network unavailable test...');
+      console.log('[Network Test] Calling reinitialize()...');
+      await Verisoul.reinitialize();
+
+      console.log('[Network Test] Calling getSessionID()...');
+      const sessionId = await Verisoul.getSessionID();
+
+      // If we get here, the test failed - we expected an error
+      const duration = Date.now() - startTime;
+      console.log(
+        '[Network Test] Unexpected success - got session:',
+        sessionId.substring(0, 8) + '...'
+      );
+      setNetworkTestResult({
+        status: 'failed',
+        expectedCode: 'SESSION_UNAVAILABLE',
+        actualCode: 'none (success)',
+        message: `Got session ID instead of error. Is airplane mode enabled? Session: ${sessionId.substring(0, 8)}...`,
+        duration,
+      });
+    } catch (error: any) {
+      const duration = Date.now() - startTime;
+      const errorCode = error?.code;
+      const errorMessage = error?.message;
+
+      console.log('[Network Test] Error received:', {
+        code: errorCode,
+        message: errorMessage,
+      });
+
+      const passed = errorCode === 'SESSION_UNAVAILABLE';
+      setNetworkTestResult({
+        status: passed ? 'passed' : 'failed',
+        expectedCode: 'SESSION_UNAVAILABLE',
+        actualCode: errorCode || 'undefined',
+        message: errorMessage,
+        duration,
+      });
+    } finally {
+      setNetworkTestRunning(false);
+    }
+  };
+
   return (
     <VerisoulTouchRootView>
       <SafeAreaView style={styles.container}>
@@ -106,7 +215,19 @@ export default function App() {
           {/* SDK Status */}
           <View style={styles.statusContainer}>
             {sdkStatus === SDKStatus.FAILED ? (
-              <Text style={styles.statusError}>SDK Configuration Failed</Text>
+              <View>
+                <Text style={styles.statusError}>SDK Configuration Failed</Text>
+                {configError && (
+                  <View style={styles.errorDetails}>
+                    <Text style={styles.errorCode}>
+                      Error Code: {configError.code || 'undefined'}
+                    </Text>
+                    <Text style={styles.errorMessage}>
+                      Message: {configError.message || 'undefined'}
+                    </Text>
+                  </View>
+                )}
+              </View>
             ) : sdkStatus === SDKStatus.SUCCESS ? (
               <Text style={styles.statusSuccess}>SDK Configured</Text>
             ) : (
@@ -212,6 +333,180 @@ export default function App() {
             </TouchableOpacity>
           </View>
 
+          <View style={styles.divider} />
+
+          {/* Error Code Test Section */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>WebView Unavailable Test</Text>
+
+            <View style={styles.configBox}>
+              <Text style={styles.chaosDescription}>
+                Tests WEBVIEW_UNAVAILABLE error code propagation.
+              </Text>
+              <Text
+                style={[
+                  styles.chaosDescription,
+                  { marginTop: 10, fontWeight: '600' },
+                ]}
+              >
+                Test Steps:
+              </Text>
+              <Text style={styles.chaosDescription}>
+                1. Disable WebView on emulator:
+              </Text>
+              <Text
+                style={[
+                  styles.chaosDescription,
+                  { fontFamily: 'monospace', fontSize: 11, marginLeft: 10 },
+                ]}
+              >
+                adb shell pm disable-user --user 0 com.google.android.webview
+              </Text>
+              <Text style={styles.chaosDescription}>
+                2. Restart/Rebuild the app
+              </Text>
+              <Text style={styles.chaosDescription}>
+                3. SDK configure() should fail with WEBVIEW_UNAVAILABLE
+              </Text>
+            </View>
+
+            {/* Show automatic test result based on initial configure() */}
+            {sdkStatus === SDKStatus.FAILED && configError && (
+              <View
+                style={[
+                  styles.testResultBox,
+                  configError.code === 'WEBVIEW_UNAVAILABLE'
+                    ? styles.testResultPass
+                    : styles.testResultFail,
+                ]}
+              >
+                <Text style={styles.testResultTitle}>
+                  {configError.code === 'WEBVIEW_UNAVAILABLE'
+                    ? '✅ TEST PASSED'
+                    : '❌ TEST FAILED (wrong error code)'}
+                </Text>
+                <Text style={styles.testResultText}>
+                  Expected: WEBVIEW_UNAVAILABLE
+                </Text>
+                <Text style={styles.testResultText}>
+                  Actual: {configError.code || 'undefined'}
+                </Text>
+                <Text style={styles.testResultMessage}>
+                  {configError.message}
+                </Text>
+              </View>
+            )}
+
+            {sdkStatus === SDKStatus.SUCCESS && (
+              <View style={[styles.testResultBox, styles.testResultFail]}>
+                <Text style={styles.testResultTitle}>
+                  ⚠️ WebView is Available
+                </Text>
+                <Text style={styles.testResultMessage}>
+                  SDK configured successfully. To test WEBVIEW_UNAVAILABLE,
+                  disable WebView first and restart the app.
+                </Text>
+              </View>
+            )}
+
+            <TouchableOpacity
+              style={[
+                styles.button,
+                styles.redButton,
+                sdkStatus === SDKStatus.LOADING && styles.disabledButton,
+              ]}
+              onPress={configureSDK}
+              disabled={sdkStatus === SDKStatus.LOADING}
+            >
+              <Text style={styles.buttonText}>🔄 Retry SDK Configuration</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.divider} />
+
+          {/* Network Unavailable Test Section */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Network Unavailable Test</Text>
+
+            <View style={styles.configBox}>
+              <Text style={styles.chaosDescription}>
+                Tests SESSION_UNAVAILABLE error code when network is
+                unavailable.
+              </Text>
+              <Text
+                style={[
+                  styles.chaosDescription,
+                  { marginTop: 10, fontWeight: '600' },
+                ]}
+              >
+                Test Steps:
+              </Text>
+              <Text style={styles.chaosDescription}>
+                1. Enable Airplane Mode on the emulator
+              </Text>
+              <Text style={styles.chaosDescription}>
+                2. Press the "Run Network Test" button below
+              </Text>
+              <Text style={styles.chaosDescription}>
+                3. Wait ~2 minutes for SDK retries to exhaust
+              </Text>
+              <Text style={styles.chaosDescription}>
+                4. Should receive SESSION_UNAVAILABLE error
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              style={[
+                styles.button,
+                styles.purpleButton,
+                networkTestRunning && styles.disabledButton,
+              ]}
+              onPress={handleNetworkUnavailableTest}
+              disabled={networkTestRunning}
+            >
+              <Text style={styles.buttonText}>
+                {networkTestRunning
+                  ? '⏳ Test Running...'
+                  : '✈️ Run Network Unavailable Test'}
+              </Text>
+            </TouchableOpacity>
+
+            {networkTestResult && (
+              <View
+                style={[
+                  styles.testResultBox,
+                  networkTestResult.status === 'running'
+                    ? styles.testResultRunning
+                    : networkTestResult.status === 'passed'
+                      ? styles.testResultPass
+                      : styles.testResultFail,
+                ]}
+              >
+                <Text style={styles.testResultTitle}>
+                  {networkTestResult.status === 'running'
+                    ? '⏳ TEST RUNNING'
+                    : networkTestResult.status === 'passed'
+                      ? '✅ TEST PASSED'
+                      : '❌ TEST FAILED'}
+                </Text>
+                <Text style={styles.testResultText}>
+                  Expected: {networkTestResult.expectedCode}
+                </Text>
+                <Text style={styles.testResultText}>
+                  Actual: {networkTestResult.actualCode || 'pending...'}
+                </Text>
+                {networkTestResult.duration !== undefined && (
+                  <Text style={styles.testResultText}>
+                    Duration: {(networkTestResult.duration / 1000).toFixed(1)}s
+                  </Text>
+                )}
+                <Text style={styles.testResultMessage}>
+                  {networkTestResult.message}
+                </Text>
+              </View>
+            )}
+          </View>
+
           {isRunning && (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="#007AFF" />
@@ -283,6 +578,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#c00',
     marginBottom: 10,
+    textAlign: 'center',
+  },
+  errorDetails: {
+    backgroundColor: '#fff0f0',
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  errorCode: {
+    fontSize: 14,
+    fontFamily: 'monospace',
+    color: '#c00',
+    fontWeight: '600',
+  },
+  errorMessage: {
+    fontSize: 12,
+    fontFamily: 'monospace',
+    color: '#666',
+    marginTop: 5,
   },
   statusLoading: {
     fontSize: 14,
@@ -356,8 +670,48 @@ const styles = StyleSheet.create({
   orangeButton: {
     backgroundColor: '#FF9500',
   },
+  redButton: {
+    backgroundColor: '#FF3B30',
+  },
+  purpleButton: {
+    backgroundColor: '#5856D6',
+  },
   disabledButton: {
     backgroundColor: '#999',
+  },
+  testResultBox: {
+    marginTop: 15,
+    padding: 15,
+    borderRadius: 10,
+    borderWidth: 2,
+  },
+  testResultPass: {
+    backgroundColor: '#d4edda',
+    borderColor: '#28a745',
+  },
+  testResultFail: {
+    backgroundColor: '#f8d7da',
+    borderColor: '#dc3545',
+  },
+  testResultRunning: {
+    backgroundColor: '#fff3cd',
+    borderColor: '#ffc107',
+  },
+  testResultTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  testResultText: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 5,
+    fontFamily: 'monospace',
+  },
+  testResultMessage: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 10,
   },
   buttonText: {
     color: '#fff',
