@@ -23,6 +23,9 @@ class VerisoulReactnative: NSObject {
     do {
       try Verisoul.shared.configure(env: env, projectId: projectId)
       resolve("Configuration successful")
+    } catch let error as VerisoulSDK.VerisoulException {
+      // Preserve native SDK's error code
+      reject(error.errorCode, "SDK configuration failed: \(error.localizedDescription)", error)
     } catch {
       reject("UNKNOWN_ERROR", "SDK configuration failed: \(error.localizedDescription)", error)
     }
@@ -35,6 +38,9 @@ class VerisoulReactnative: NSObject {
       do {
         let sessionId = try await Verisoul.shared.session()
         resolve(sessionId)
+      } catch let error as VerisoulSDK.VerisoulException {
+        // Preserve native SDK's error code
+        reject(error.errorCode, "Failed to retrieve session ID: \(error.localizedDescription)", error)
       } catch {
         reject(VerisoulErrorCodes.SESSION_UNAVAILABLE, "Failed to retrieve session ID: \(error.localizedDescription)", error)
       }

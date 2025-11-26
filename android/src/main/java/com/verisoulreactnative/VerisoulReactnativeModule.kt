@@ -2,6 +2,7 @@ package com.verisoulreactnative
 
 import ai.verisoul.sdk.Verisoul
 import ai.verisoul.sdk.VerisoulEnvironment
+import ai.verisoul.sdk.VerisoulException
 import ai.verisoul.sdk.helpers.webview.VerisoulSessionCallback
 
 import android.os.Handler
@@ -43,7 +44,8 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
       try {
         Verisoul.getSessionId(object : VerisoulSessionCallback {
           override fun onFailure(exception: Throwable) {
-            promise.reject(VerisoulErrorCodes.SESSION_UNAVAILABLE, "Failed to retrieve session ID: ${exception.message}", exception)
+            val errorCode = (exception as? VerisoulException)?.code ?: VerisoulErrorCodes.SESSION_UNAVAILABLE
+            promise.reject(errorCode, "Failed to retrieve session ID: ${exception.message}", exception)
           }
 
           override fun onSuccess(sessionId: String) {
@@ -51,7 +53,8 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
           }
         })
       } catch (e: Exception) {
-        promise.reject(VerisoulErrorCodes.SESSION_UNAVAILABLE, "Failed to retrieve session ID: ${e.message}", e)
+        val errorCode = (e as? VerisoulException)?.code ?: VerisoulErrorCodes.SESSION_UNAVAILABLE
+        promise.reject(errorCode, "Failed to retrieve session ID: ${e.message}", e)
       }
     }
   }
