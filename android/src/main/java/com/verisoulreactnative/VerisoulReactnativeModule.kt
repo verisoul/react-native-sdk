@@ -2,6 +2,7 @@ package com.verisoulreactnative
 
 import ai.verisoul.sdk.Verisoul
 import ai.verisoul.sdk.VerisoulEnvironment
+import ai.verisoul.sdk.VerisoulException
 import ai.verisoul.sdk.helpers.webview.VerisoulSessionCallback
 
 import android.os.Handler
@@ -43,7 +44,8 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
       try {
         Verisoul.getSessionId(object : VerisoulSessionCallback {
           override fun onFailure(exception: Throwable) {
-            promise.reject(exception)
+            val errorCode = (exception as? VerisoulException)?.code ?: VerisoulErrorCodes.SESSION_UNAVAILABLE
+            promise.reject(errorCode, "Failed to retrieve session ID: ${exception.message}", exception)
           }
 
           override fun onSuccess(sessionId: String) {
@@ -51,7 +53,8 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
           }
         })
       } catch (e: Exception) {
-        promise.reject(e)
+        val errorCode = (e as? VerisoulException)?.code ?: VerisoulErrorCodes.SESSION_UNAVAILABLE
+        promise.reject(errorCode, "Failed to retrieve session ID: ${e.message}", e)
       }
     }
   }
@@ -63,7 +66,8 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
         Verisoul.reinitialize()
         promise.resolve(true)
       } catch (e: Exception) {
-        promise.reject(e)
+        val errorCode = (e as? VerisoulException)?.code ?: "UNKNOWN_ERROR"
+        promise.reject(errorCode, "Failed to reinitialize SDK: ${e.message}", e)
       }
     }
   }
@@ -72,12 +76,17 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
   fun configure(env: String, productId: String, promise: Promise) {
     mainHandler.post {
       try {
-        val logLevel =
-          sdkLogLevels[env] ?: throw IllegalArgumentException("Invalid environment: $env")
+        val logLevel = sdkLogLevels[env]
+        if (logLevel == null) {
+          promise.reject(VerisoulErrorCodes.INVALID_ENVIRONMENT, "Invalid environment value: $env")
+          return@post
+        }
+        
         Verisoul.init(reactApplicationContext, logLevel, productId)
         promise.resolve(true)
       } catch (e: Exception) {
-        promise.reject(e)
+        val errorCode = (e as? VerisoulException)?.code ?: "UNKNOWN_ERROR"
+        promise.reject(errorCode, "SDK configuration failed: ${e.message}", e)
       }
     }
   }

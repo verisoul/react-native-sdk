@@ -80,3 +80,7 @@ lib/
 # React Native Codegen
 ios/generated
 android/generated
+
+# Environment variables
+example/.env
+.env.local
