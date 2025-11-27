@@ -1520,9 +1520,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - VerisoulSDK (= 0.4.63-beta.6)
+    - VerisoulSDK (= 0.4.63)
     - Yoga
-  - VerisoulSDK (0.4.63-beta.6)
+  - VerisoulSDK (0.4.63)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1594,7 +1594,7 @@ DEPENDENCIES:
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - verisoul-reactnative (from `../..`)
-  - VerisoulSDK (from `https://github.com/verisoul/ios-sdk.git`, tag `0.4.63-beta.6`)
+  - VerisoulSDK (from `https://github.com/verisoul/ios-sdk.git`, tag `0.4.63`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -1737,14 +1737,14 @@ EXTERNAL SOURCES:
     :path: "../.."
   VerisoulSDK:
     :git: https://github.com/verisoul/ios-sdk.git
-    :tag: 0.4.63-beta.6
+    :tag: 0.4.63
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 CHECKOUT OPTIONS:
   VerisoulSDK:
     :git: https://github.com/verisoul/ios-sdk.git
-    :tag: 0.4.63-beta.6
+    :tag: 0.4.63
 
 SPEC CHECKSUMS:
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
@@ -1813,10 +1813,10 @@ SPEC CHECKSUMS:
   ReactCodegen: 58a974a1a86362975fd49596480c5f0f17ee06a2
   ReactCommon: e686c5766f0ebe5293be5a3957b833645cdac8ad
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  verisoul-reactnative: 568471150eed432f8804425f67685a2627d99fab
-  VerisoulSDK: 204fec6daf005c090588928e61f45f1fa527f193
+  verisoul-reactnative: 931f258dd6b93c4333da5e9fb20b60c093c58e9e
+  VerisoulSDK: f14b2ff72d48f0cc3dd9890c93cecddc24f336dc
   Yoga: c34725819ab0a5962e85455b9e56679b306910ee
 
-PODFILE CHECKSUM: aa2911bc55cd8e431dccea12e22f386978429fb6
+PODFILE CHECKSUM: e1e10530cef8faf26065787d091b48716c7004e6
 
 COCOAPODS: 1.16.2
