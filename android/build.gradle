@@ -63,7 +63,6 @@ android {
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
-
   }
 
   buildTypes {
@@ -106,7 +105,11 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-   api "ai.verisoul:android:0.4.61"
+  api "ai.verisoul:android:0.4.61"
 
+  // Unit test dependencies for deadlock demonstration tests
+  testImplementation "junit:junit:4.13.2"
+  testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"
+  testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3"
 }
 
