@@ -14,6 +14,9 @@ target 'VerisoulReactnativeExample' do
   # Enable dynamic frameworks for VerisoulSDK xcframework support
   use_frameworks! :linkage => :dynamic
   config = use_native_modules!
+  
+  # VerisoulSDK from GitHub
+  pod 'VerisoulSDK', :git => 'https://github.com/verisoul/ios-sdk.git', :tag => '0.4.63'
 
   use_react_native!(
     :path => config[:reactNativePath],

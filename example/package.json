@@ -12,7 +12,8 @@
   "dependencies": {
     "@verisoul_ai/react-native-verisoul": "workspace:^",
     "react": "18.3.1",
-    "react-native": "0.77.0"
+    "react-native": "0.77.0",
+    "react-native-dotenv": "^3.4.11"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
