@@ -10,7 +10,7 @@
 
 Verisoul provides a React Native SDK that allows you to implement fraud prevention in your cross-platform mobile applications. This guide covers the installation, configuration, and usage of the Verisoul React Native SDK.
 
-_To run the app a Verisoul Project ID is required._ Schedule a call [here](https://meetings.hubspot.com/henry-legard) to get started.
+_To run the SDK a Verisoul Project ID is required._ Schedule a call [here](https://meetings.hubspot.com/henry-legard) to get started.
 
 ## System Requirements
 
@@ -82,18 +82,20 @@ The `configure()` method initializes the Verisoul SDK with your project credenti
 
 **Parameters:**
 
-- `environment` (VerisoulEnvironment): The environment to use - `VerisoulEnvironment.prod` for production or `VerisoulEnvironment.sandbox` for testing
-- `projectId` (string): Your unique Verisoul project identifier
+- `environment`: The environment to use `VerisoulEnvironment.prod` for production or `VerisoulEnvironment.sandbox` for testing
+- `projectId`: Your unique Verisoul project identifier
 
 **Example:**
 
 ```js
-import Verisoul, { VerisoulEnvironment } from '@verisoul_ai/react-native-verisoul';
+import Verisoul, {
+  VerisoulEnvironment,
+} from "@verisoul_ai/react-native-verisoul";
 
 useEffect(() => {
   Verisoul.configure({
     environment: VerisoulEnvironment.prod, // or VerisoulEnvironment.sandbox
-    projectId: 'YOUR_PROJECT_ID',
+    projectId: "YOUR_PROJECT_ID",
   });
 }, []);
 ```
@@ -115,8 +117,6 @@ The `getSessionID()` method returns the current session identifier after the SDK
 
 ```js
 const sessionId = await Verisoul.getSessionID();
-// Send sessionId to your backend for risk assessment
-console.log('Session ID:', sessionId);
 ```
 
 ### reinitialize()
@@ -126,10 +126,7 @@ The `reinitialize()` method generates a fresh session ID and resets the SDK's da
 **Example:**
 
 ```js
-// User logs out
 await Verisoul.reinitialize();
-
-// Now ready for a new user to log in with a fresh session
 ```
 
 After calling this method, you can call `getSessionID()` to retrieve the new session identifier.
@@ -143,48 +140,21 @@ Touch event data is collected and analyzed to detect automated/bot behavior by c
 Wrap your root component with `VerisoulTouchRootView` to automatically capture touch events across both iOS and Android:
 
 ```js
-import { VerisoulTouchRootView } from '@verisoul_ai/react-native-verisoul';
+import { VerisoulTouchRootView } from "@verisoul_ai/react-native-verisoul";
 
 function App() {
   return (
-    <VerisoulTouchRootView>
-      {/* Your app components */}
-    </VerisoulTouchRootView>
+    <VerisoulTouchRootView>{/* Your app components */}</VerisoulTouchRootView>
   );
-}
-```
-
-#### Android: Additional Touch Event Configuration
-
-For Android, you must also override the `dispatchTouchEvent` method in your `MainActivity` to enable touch event collection at the native level. This allows the SDK to compare touch events with accelerometer sensor data for enhanced fraud detection.
-
-```kotlin
-import ai.verisoul.sdk.Verisoul
-import android.view.MotionEvent
-
-class MainActivity : ReactActivity() {
-
-  override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
-    Verisoul.onTouchEvent(event)
-    return super.dispatchTouchEvent(event)
-  }
 }
 ```
 
 #### iOS Configuration
 
-For iOS-specific configuration including Device Check and App Attest setup, please refer to the [iOS SDK Documentation](https://docs.verisoul.ai/integration/frontend/ios#ios-device-check).
+For iOS-specific configuration including Device Check and App Attest setup, please refer to the [iOS SDK Documentation](/integration/frontend/ios#ios-device-check).
 
 ## Example
-
 For a complete working example, see the [example folder](https://github.com/verisoul/react-native-sdk/tree/main/example) in this repository.
 
 ## Additional Resources
-
-- [Backend Integration Documentation](https://docs.verisoul.ai/integration/backend/authenticated) - Learn how to implement API calls from your backend
-- [Integration Best Practices](https://docs.verisoul.ai/integration/best-practices) - Tips for optimal SDK implementation
-- [Verisoul React Native SDK on NPM](https://www.npmjs.com/package/@verisoul_ai/react-native-verisoul) - Package information and version history
-
-## Questions and Feedback
-
-Comprehensive documentation about Verisoul's React Native SDK and API can be found at [docs.verisoul.ai](https://docs.verisoul.ai/). Additionally, reach out to Verisoul at [help@verisoul.ai](mailto:help@verisoul.ai) for any questions or feedback.
+- [Verisoul NPM](https://www.npmjs.com/package/@verisoul_ai/react-native-verisoul)

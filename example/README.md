@@ -13,18 +13,26 @@ This example app demonstrates how to integrate the Verisoul SDK into a React Nat
 
 Before running the sample app, you need to configure it with your Verisoul credentials.
 
-1. Open `src/App.tsx` in your text editor
+1. Copy the example environment file to create your own `.env` file:
 
-2. Update the Verisoul configuration with your credentials:
-
-```js
-Verisoul.configure({
-  environment: VerisoulEnvironment.sandbox, // Change to .prod for production
-  projectId: 'YOUR_PROJECT_ID', // Replace with your actual project ID
-});
+```sh
+cp .env.example .env
 ```
 
-3. If you don't have a Verisoul Project ID, schedule a call [here](https://meetings.hubspot.com/henry-legard) to get started.
+2. Open `.env` and fill in your Verisoul credentials:
+
+```sh
+# Environment: sandbox or production
+VERISOUL_ENV=sandbox
+
+# Your Verisoul project ID
+VERISOUL_PROJECT_ID=your-project-id-here
+
+# Your Verisoul API key (for authenticate API calls)
+VERISOUL_API_KEY=your-api-key-here
+```
+
+3. If you don't have a Verisoul Project ID or API key, schedule a call [here](https://meetings.hubspot.com/henry-legard) to get started.
 
 ## Get Started
 
@@ -87,9 +95,3 @@ cd ios && pod install && cd ..
 ```sh
 npx react-native start --reset-cache
 ```
-
-## Learn More
-
-- [Verisoul Documentation](https://docs.verisoul.ai/)
-- [React Native Documentation](https://reactnative.dev/docs/getting-started)
-- [Verisoul React Native SDK](https://github.com/verisoul/react-native-sdk)
