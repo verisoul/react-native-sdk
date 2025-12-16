@@ -1,0 +1,30 @@
+{
+  "name": "verisoul-expo-example",
+  "version": "1.0.0",
+  "main": "expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "prebuild": "expo prebuild",
+    "prebuild:clean": "expo prebuild --clean"
+  },
+  "dependencies": {
+    "@react-native/metro-config": "^0.83.0",
+    "@verisoul_ai/react-native-verisoul": "file:..",
+    "expo": "~52.0.0",
+    "expo-asset": "^11.0.5",
+    "expo-build-properties": "~0.13.0",
+    "expo-constants": "^17.0.8",
+    "expo-file-system": "^18.0.12",
+    "expo-status-bar": "~2.0.0",
+    "react": "18.3.1",
+    "react-native": "0.76.9"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@types/react": "~18.3.12",
+    "typescript": "~5.3.3"
+  },
+  "private": true
+}
