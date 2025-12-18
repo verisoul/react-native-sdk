@@ -16,7 +16,8 @@
         "types": "./lib/typescript/commonjs/src/index.d.ts",
         "default": "./lib/commonjs/index.js"
       }
-    }
+    },
+    "./app.plugin.js": "./app.plugin.js"
   },
   "files": [
     "src",
@@ -25,7 +26,11 @@
     "ios",
     "cpp",
     "*.podspec",
+    "app.plugin.js",
     "react-native.config.json",
+    "plugin/build",
+    "!plugin/src",
+    "!plugin/node_modules",
     "!ios/build",
     "!android/build",
     "!android/gradle",
@@ -42,8 +47,9 @@
     "test": "jest",
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
-    "prepare": "bob build",
+    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib plugin/build",
+    "prepare": "bob build && yarn plugin:build",
+    "plugin:build": "cd plugin && tsc",
     "release": "release-it"
   },
   "keywords": [
@@ -67,6 +73,9 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "expo": {
+    "plugin": "./plugin/build/index.js"
+  },
   "peerDependencies": {
     "react": ">=16.8.6",
     "react-native": ">=0.60.0"
@@ -74,10 +83,12 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.5.0",
+    "@expo/config-plugins": "^8.0.0",
     "@react-native-community/cli": "15.0.1",
     "@react-native/eslint-config": "^0.73.1",
     "@release-it/conventional-changelog": "^9.0.4",
     "@types/jest": "^29.5.5",
+    "@types/node": "^20.0.0",
     "@types/react": "^18.2.44",
     "commitlint": "^17.0.2",
     "del-cli": "^5.1.0",

@@ -48,31 +48,36 @@ allprojects {
 
 ### Expo Projects
 
-The Verisoul SDK is not supported in Expo Go. If you are using the managed workflow, you will need to use Expo's custom development client.
+> **Note:** Requires custom development client (not supported in Expo Go)
 
-1. Install expo-dev-client:
+**1. Install expo-dev-client:**
 
 ```sh
 npx expo install expo-dev-client
 ```
 
-2. Modify the scripts section in your `package.json` file:
+**2. Add plugin to `app.json`:**
 
 ```json
-"scripts": {
-  "start": "expo start --dev-client",
-  "android": "expo run:android",
-  "ios": "expo run:ios"
+{
+  "expo": {
+    "plugins": ["@verisoul_ai/react-native-verisoul"]
+  }
 }
 ```
 
-3. Install Verisoul SDK:
+**3. Install Verisoul SDK:**
 
 ```sh
 npm install @verisoul_ai/react-native-verisoul
 ```
 
-4. If needed, add the Maven repository to your `android/build.gradle` file as shown in the Android Configuration section above.
+**4. Prebuild and run:**
+
+```sh
+npx expo prebuild --clean
+npx expo run:android  # or npx expo run:ios
+```
 
 ## Usage
 
@@ -90,12 +95,12 @@ The `configure()` method initializes the Verisoul SDK with your project credenti
 ```js
 import Verisoul, {
   VerisoulEnvironment,
-} from "@verisoul_ai/react-native-verisoul";
+} from '@verisoul_ai/react-native-verisoul';
 
 useEffect(() => {
   Verisoul.configure({
     environment: VerisoulEnvironment.prod, // or VerisoulEnvironment.sandbox
-    projectId: "YOUR_PROJECT_ID",
+    projectId: 'YOUR_PROJECT_ID',
   });
 }, []);
 ```
@@ -140,7 +145,7 @@ Touch event data is collected and analyzed to detect automated/bot behavior by c
 Wrap your root component with `VerisoulTouchRootView` to automatically capture touch events across both iOS and Android:
 
 ```js
-import { VerisoulTouchRootView } from "@verisoul_ai/react-native-verisoul";
+import { VerisoulTouchRootView } from '@verisoul_ai/react-native-verisoul';
 
 function App() {
   return (
@@ -175,7 +180,9 @@ All errors are thrown as `VerisoulException` with the following properties:
 | cause    | Throwable? | The underlying exception that caused the error (if any) |
 
 ## Example
+
 For a complete working example, see the [example folder](https://github.com/verisoul/react-native-sdk/tree/main/example) in this repository.
 
 ## Additional Resources
+
 - [Verisoul NPM](https://www.npmjs.com/package/@verisoul_ai/react-native-verisoul)
