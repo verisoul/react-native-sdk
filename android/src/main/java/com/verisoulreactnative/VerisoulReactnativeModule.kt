@@ -1,5 +1,7 @@
 package com.verisoulreactnative
 
+import ai.verisoul.sdk.InternalVerisoulCore
+import ai.verisoul.sdk.SDKType
 import ai.verisoul.sdk.Verisoul
 import ai.verisoul.sdk.VerisoulEnvironment
 import ai.verisoul.sdk.VerisoulException
@@ -71,6 +73,7 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
         return
       }
       
+      InternalVerisoulCore.sdkType = SDKType.ReactNative
       Verisoul.init(reactApplicationContext, logLevel, productId)
       promise.resolve(true)
     } catch (e: Exception) {
