@@ -1,4 +1,4 @@
-import type { VerisoulConfig } from 'verisoul-reactnative';
+import type { VerisoulConfig } from '../models/VerisoulConfig';
 import { MotionAction, VerisoulEnvironment } from '../utils/Enums';
 import { NativeVerisoul } from '../native/NativeVerisoul';
 import { Platform } from 'react-native';

@@ -8,6 +8,7 @@ export interface VerisoulTouchRootViewProps
   extends PropsWithChildren<ViewProps> {}
 
 export const VerisoulTouchRootView = ({
+  children,
   style,
   ...rest
 }: VerisoulTouchRootViewProps) => {
@@ -23,7 +24,9 @@ export const VerisoulTouchRootView = ({
       onTouchCancel={(event) => handleTouch(event, MotionAction.ACTION_UP)} // Touch Up ch Up
       onTouchEnd={(event) => handleTouch(event, MotionAction.ACTION_UP)} // Touch Up
       {...rest}
-    />
+    >
+      {children}
+    </View>
   );
 };
 

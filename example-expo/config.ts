@@ -1,0 +1,5 @@
+export const Config = {
+  APP_CONFIG: 'sandbox',
+  VERISOUL_PROJECT_ID: '00000000-0000-0000-0000-000000000001',
+  VERISOUL_API_KEY: 'KxEv9FlAmC6h6L8uJxctYaAt4IjWoebAarqthqV5',
+};
