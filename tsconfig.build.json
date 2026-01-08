@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig",
-  "exclude": ["example", "lib", "plugin"],
+  "exclude": ["example", "example-expo", "lib", "plugin"],
   "compilerOptions": {
     "verbatimModuleSyntax": false
   }
