@@ -4,3 +4,8 @@ extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autoli
 rootProject.name = 'verisoulreactnative.example'
 include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
+
+// Work around occasional incorrect autolinking path resolution in monorepo setups.
+// Ensure the local SDK module always points to this repo's `android/` directory.
+include ':verisoul_ai_react-native-verisoul'
+project(':verisoul_ai_react-native-verisoul').projectDir = file('../../android')

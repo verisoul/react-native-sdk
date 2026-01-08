@@ -105,7 +105,7 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  api "ai.verisoul:android:0.4.61"
+  api "ai.verisoul:android:0.4.65"
 
   // Unit test dependencies for deadlock demonstration tests
   testImplementation "junit:junit:4.13.2"
