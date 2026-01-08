@@ -21,6 +21,7 @@ class VerisoulReactnative: NSObject {
     }
 
     do {
+      InternalVerisoulCore.shared.sdkType = .reactNative
       try Verisoul.shared.configure(env: env, projectId: projectId)
       resolve("Configuration successful")
     } catch {
