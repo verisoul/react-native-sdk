@@ -1,8 +1,5 @@
 import Verisoul from '@verisoul_ai/react-native-verisoul';
-
-// Configure these values for your Verisoul project
-const VERISOUL_ENV = 'dev';
-const VERISOUL_API_KEY = 'your-api-key'; // Replace with your actual API key
+import { VERISOUL_ENV, VERISOUL_API_KEY } from '@env';
 
 // Get API base URL based on environment
 const getApiBaseUrl = (env: string): string => {

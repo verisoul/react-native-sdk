@@ -21,7 +21,12 @@ const findSdkPath = () => {
   }
 
   // Last resort: try node_modules (for published package)
-  const nodeModulesPath = path.resolve(projectRoot, 'node_modules', '@verisoul_ai', 'react-native-verisoul');
+  const nodeModulesPath = path.resolve(
+    projectRoot,
+    'node_modules',
+    '@verisoul_ai',
+    'react-native-verisoul'
+  );
   if (fs.existsSync(nodeModulesPath)) {
     return nodeModulesPath;
   }
@@ -42,6 +47,9 @@ config.resolver.nodeModulesPaths = [
 // Point to the automatically detected SDK path
 config.resolver.extraNodeModules = {
   '@verisoul_ai/react-native-verisoul': findSdkPath(),
+  // Expo doesn't reliably apply the react-native-dotenv transform early enough for Metro
+  // dependency extraction, so provide a real module for '@env' as well.
+  '@env': path.resolve(projectRoot, 'src/env.ts'),
 };
 
 module.exports = config;

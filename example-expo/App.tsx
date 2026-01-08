@@ -21,11 +21,7 @@ import {
   type TestResults,
 } from './src/testHarness';
 import ResultsView from './src/ResultsView';
-
-// Configure these values for your Verisoul project
-// For testing, use 'dev' environment and your project ID
-const VERISOUL_ENV = 'dev';
-const VERISOUL_PROJECT_ID = '00000000-0000-0000-0000-000000000001'; // Replace with your actual project ID
+import { VERISOUL_ENV, VERISOUL_PROJECT_ID } from '@env';
 
 // Map env string to VerisoulEnvironment
 const getEnvironment = (env: string): VerisoulEnvironment => {
