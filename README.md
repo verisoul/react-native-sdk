@@ -56,11 +56,12 @@ allprojects {
 npx expo install expo-dev-client
 ```
 
-**2. Add plugin to `app.json`:**
+**2. Configure `app.json`: add the plugin and set `newArchEnabled` to `true`**
 
 ```json
 {
   "expo": {
+    "newArchEnabled": true,
     "plugins": ["@verisoul_ai/react-native-verisoul"]
   }
 }
