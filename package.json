@@ -45,7 +45,7 @@
   "scripts": {
     "example": "yarn workspace verisoul-reactnative-example",
     "test": "jest",
-    "typecheck": "tsc",
+    "typecheck": "tsc -p tsconfig.build.json",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib plugin/build",
     "prepare": "bob build && yarn plugin:build",
