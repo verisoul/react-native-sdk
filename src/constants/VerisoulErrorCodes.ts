@@ -17,6 +17,11 @@ export const VerisoulErrorCodes = {
    * Invalid environment parameter
    */
   INVALID_ENVIRONMENT: 'INVALID_ENVIRONMENT',
+
+  /**
+   * WebView renderer process crashed
+   */
+  WEBVIEW_RENDERER_CRASHED: 'WEBVIEW_RENDERER_CRASHED',
 } as const;
 
 export type VerisoulErrorCode =
