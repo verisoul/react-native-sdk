@@ -1,0 +1,300 @@
+name: Integration Tests
+
+on:
+  push:
+    tags:
+      - "v*"
+    branches:
+      - "feat/automated-e2e-integration-tests"
+  workflow_dispatch:
+    inputs:
+      run_expo:
+        description: "Run Expo E2E tests"
+        type: boolean
+        default: true
+      run_android:
+        description: "Run Android E2E tests"
+        type: boolean
+        default: true
+      run_ios:
+        description: "Run iOS E2E tests"
+        type: boolean
+        default: true
+
+jobs:
+  android-integration-tests:
+    if: ${{ github.event_name == 'push' || inputs.run_android }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "yarn"
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install root dependencies
+        run: yarn install --immutable
+
+      - name: Build library
+        run: yarn prepare
+
+      - name: Setup example app
+        run: |
+          cd example
+          yarn install --immutable
+          cp .env.example .env
+
+      - name: Build App for Detox
+        run: |
+          cd example
+          cd android && ./gradlew clean && cd ..
+          yarn detox:build:android
+
+      - name: Run Android E2E Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          target: google_apis
+          avd-name: test
+          force-avd-creation: false
+          disable-animations: true
+          emulator-options: -no-snapshot -no-window -no-boot-anim -no-audio -gpu swiftshader_indirect -wipe-data
+          working-directory: example
+          script: |
+            adb kill-server && adb start-server
+            sleep 20
+            yarn detox test --configuration android.emu.debug --record-logs all -l verbose | tee detox.log
+            adb logcat -d *:E > errors.log
+
+      - name: Upload test logs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-test-logs
+          path: |
+            example/detox.log
+            example/errors.log
+            example/artifacts/
+          if-no-files-found: ignore
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-integration-test-results
+          path: example/android/app/build/outputs/apk/debug/
+
+  ios-integration-tests:
+    if: ${{ github.event_name == 'push' || inputs.run_ios }}
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "yarn"
+
+      - name: Install root dependencies
+        run: yarn install --immutable
+
+      - name: Build library
+        run: yarn prepare
+
+      - name: Setup example app
+        run: |
+          cd example
+          yarn install --immutable
+
+          cp .env.example .env
+          echo "VERISOUL_PROJECT_ID=00000000-0000-0000-0000-000000000001" >> .env
+          echo "VERISOUL_ENV=dev" >> .env
+          echo "VERISOUL_API_KEY=KxEv9FlAmC6h6L8uJxctYaAt4IjWoebAarqthqV5" >> .env
+
+      - name: Install CocoaPods
+        run: |
+          cd example/ios
+          rm -rf Pods Podfile.lock
+          bundle install
+          export NODE_BINARY=$(which node)
+          bundle exec pod install --repo-update
+
+      - name: Install applesimutils
+        run: |
+          brew tap wix/brew
+          brew install applesimutils
+
+      - name: Clean Derived Data
+        run: rm -rf ~/Library/Developer/Xcode/DerivedData/*
+
+      - name: Bundle JS for iOS
+        run: |
+          cd example
+          npx react-native bundle \
+            --platform ios \
+            --dev false \
+            --entry-file index.js \
+            --bundle-output ios/main.jsbundle \
+            --assets-dest ios
+
+      - name: Build iOS App for Detox
+        env:
+          NO_FLIPPER: 1
+          RCT_NEW_ARCH_ENABLED: 0
+        run: |
+          cd example
+          yarn detox:build:ios
+
+      - name: Boot iOS Simulator
+        run: |
+          xcrun simctl boot "iPhone 15" || true
+          xcrun simctl bootstatus "iPhone 15" -b
+
+      - name: Install App
+        run: |
+          cd example
+          xcrun simctl install booted ios/build/Build/Products/Debug-iphonesimulator/VerisoulReactnativeExample.app
+
+      - name: Run E2E Tests
+        timeout-minutes: 10
+        run: |
+          cd example
+          sleep 10
+          detox test --configuration ios.sim.debug --record-logs all -l verbose | tee detox.log
+
+      - name: Upload test logs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-test-logs
+          path: |
+            example/detox.log
+            example/artifacts/
+          if-no-files-found: ignore
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-integration-test-results
+          path: |
+            example/ios/build/Build/Products/Debug-iphonesimulator/
+
+  expo-integration-tests:
+    if: ${{ github.event_name == 'push' || inputs.run_expo }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "yarn"
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install root dependencies
+        run: yarn install --immutable
+
+      - name: Build library
+        run: yarn prepare
+
+      - name: Setup Expo example app
+        run: |
+          cd example-expo
+          npm install
+          cp .env.example .env
+          echo "VERISOUL_PROJECT_ID=00000000-0000-0000-0000-000000000001" >> .env
+          echo "VERISOUL_ENV=dev" >> .env
+          echo "VERISOUL_API_KEY=KxEv9FlAmC6h6L8uJxctYaAt4IjWoebAarqthqV5" >> .env
+
+      - name: Validate TypeScript
+        run: |
+          cd example-expo
+          npx tsc --noEmit
+
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Build Expo Android App
+        run: |
+          cd example-expo
+          npx expo prebuild --platform android --clean
+          cd android && ./gradlew assembleRelease
+
+      - name: Run Expo E2E Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 15
+        with:
+          api-level: 30
+          arch: x86_64
+          target: google_apis
+          emulator-options: -no-snapshot -no-window -no-boot-anim -no-audio -gpu swiftshader_indirect
+          working-directory: example-expo
+          script: |
+            adb wait-for-device
+            adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
+            sleep 10
+            adb install -r android/app/build/outputs/apk/release/app-release.apk
+            sleep 5
+            ~/.maestro/bin/maestro test .maestro/verisoul-init.yaml --debug-output ~/.maestro/debug
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: expo-integration-test-results
+          path: |
+            example-expo/android/app/build/outputs/apk/release/
+            ~/.maestro/debug/
+            ~/.maestro/tests/

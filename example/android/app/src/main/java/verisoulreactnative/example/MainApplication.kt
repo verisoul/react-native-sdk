@@ -24,7 +24,17 @@ class MainApplication : Application(), ReactApplication {
 
         override fun getJSMainModuleName(): String = "index"
 
-        override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
+        override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG && !isRunningInTest()
+
+        private fun isRunningInTest(): Boolean {
+            // Check if running under Detox test
+            return try {
+                Class.forName("com.wix.detox.Detox")
+                true
+            } catch (e: ClassNotFoundException) {
+                false
+            }
+        }
 
         override val isNewArchEnabled: Boolean = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
         override val isHermesEnabled: Boolean = BuildConfig.IS_HERMES_ENABLED
