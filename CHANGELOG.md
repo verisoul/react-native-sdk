@@ -1,3 +1,10 @@
+## [0.4.65] - 2026-01-23
+
+### Changed
+- **Android**: bump `ai.verisoul:android` to **0.4.66**
+- **iOS**: add `WEBVIEW_RENDERER_CRASHED` error code
+- **TypeScript**: add `WEBVIEW_RENDERER_CRASHED` error code
+
 ## [0.4.64] - 2026-01-08
 
 ### Changed
