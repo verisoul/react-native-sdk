@@ -94,7 +94,6 @@ rootProject.allprojects {
   repositories {
     mavenCentral()
     google()
-    jcenter()
     maven { url = uri("https://us-central1-maven.pkg.dev/verisoul/android") }
   }
   }
