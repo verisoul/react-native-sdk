@@ -1500,7 +1500,7 @@ PODS:
     - React-perflogger (= 0.77.0)
     - React-utils (= 0.77.0)
   - SocketRocket (0.7.1)
-  - verisoul-reactnative (0.4.63):
+  - verisoul-reactnative (0.4.65):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1520,9 +1520,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - VerisoulSDK (= 0.4.64)
+    - VerisoulSDK (= 0.4.65)
     - Yoga
-  - VerisoulSDK (0.4.64)
+  - VerisoulSDK (0.4.65)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1594,7 +1594,7 @@ DEPENDENCIES:
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - verisoul-reactnative (from `../..`)
-  - VerisoulSDK (from `https://github.com/verisoul/ios-sdk.git`, tag `0.4.64`)
+  - VerisoulSDK (from `https://github.com/verisoul/ios-sdk.git`, tag `0.4.65`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -1737,14 +1737,14 @@ EXTERNAL SOURCES:
     :path: "../.."
   VerisoulSDK:
     :git: https://github.com/verisoul/ios-sdk.git
-    :tag: 0.4.64
+    :tag: 0.4.65
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 CHECKOUT OPTIONS:
   VerisoulSDK:
     :git: https://github.com/verisoul/ios-sdk.git
-    :tag: 0.4.64
+    :tag: 0.4.65
 
 SPEC CHECKSUMS:
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
@@ -1813,10 +1813,10 @@ SPEC CHECKSUMS:
   ReactCodegen: 58a974a1a86362975fd49596480c5f0f17ee06a2
   ReactCommon: e686c5766f0ebe5293be5a3957b833645cdac8ad
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  verisoul-reactnative: 27dcd26fc26ef1275dd87e3fbca4c8875b20f665
-  VerisoulSDK: 61296c96e33bb2cec1ebf880147296dabc8f739e
+  verisoul-reactnative: 9c1dd543f22666a15ea44f70d60cf077c8bba92d
+  VerisoulSDK: cb64c8e609dd32c2ce29d36881a8d60569cc59ac
   Yoga: c34725819ab0a5962e85455b9e56679b306910ee
 
-PODFILE CHECKSUM: 1a2fbdc0fbf825fcd97424301431897a1f7a861a
+PODFILE CHECKSUM: 4cfa36f2cfb597e56608b172c971270efdc8d664
 
 COCOAPODS: 1.15.2
