@@ -18,6 +18,7 @@ _To run the SDK a Verisoul Project ID is required._ Schedule a call [here](https
 - iOS 14.0 or higher
 - Android API level 21 (Android 5.0) or higher
 - For Expo projects: Expo SDK 45 or higher with custom development client
+- SDK Size: ~90 KB (plus native iOS and Android SDK dependencies)
 
 ## Installation
 
