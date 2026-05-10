@@ -118,25 +118,12 @@ The `getSessionID()` method returns the current session identifier after the SDK
 - Session IDs are short-lived and expire after 24 hours
 - The session ID becomes available once minimum data collection is complete (typically within seconds)
 - You should send this session ID to your backend, which can then call Verisoul's API to get a risk assessment
-- A new session ID is generated each time the SDK is initialized or when `reinitialize()` is called
 
 **Example:**
 
 ```js
 const sessionId = await Verisoul.getSessionID();
 ```
-
-### reinitialize()
-
-The `reinitialize()` method generates a fresh session ID and resets the SDK's data collection. This is essential for maintaining data integrity when user context changes.
-
-**Example:**
-
-```js
-await Verisoul.reinitialize();
-```
-
-After calling this method, you can call `getSessionID()` to retrieve the new session identifier.
 
 ### Provide Touch Events
 
