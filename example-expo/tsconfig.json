@@ -4,7 +4,8 @@
     "strict": true,
     "paths": {
       "@env": ["./src/env"],
-      "@verisoul_ai/react-native-verisoul": ["../src/index.tsx"]
+      "@verisoul_ai/react-native-verisoul": ["../src/index.tsx"],
+      "verisoul-reactnative": ["../src/index.tsx"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"]

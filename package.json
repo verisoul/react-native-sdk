@@ -142,6 +142,34 @@
       "@react-native",
       "prettier"
     ],
+    "overrides": [
+      {
+        "files": [
+          "example/e2e/**/*.js"
+        ],
+        "env": {
+          "jest": true
+        },
+        "globals": {
+          "describe": "readonly",
+          "it": "readonly",
+          "beforeAll": "readonly",
+          "expect": "readonly",
+          "element": "readonly",
+          "by": "readonly",
+          "waitFor": "readonly",
+          "device": "readonly"
+        }
+      },
+      {
+        "files": [
+          "example/.detoxrc.js"
+        ],
+        "parserOptions": {
+          "sourceType": "commonjs"
+        }
+      }
+    ],
     "rules": {
       "react/react-in-jsx-scope": "off",
       "prettier/prettier": [

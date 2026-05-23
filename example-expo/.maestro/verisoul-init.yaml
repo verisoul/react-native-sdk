@@ -1,0 +1,46 @@
+appId: ai.verisoul.expoexample
+---
+- launchApp:
+    clearState: true
+
+- extendedWaitUntil:
+    visible:
+      id: "android:id/content"
+    timeout: 30000
+
+- assertVisible:
+    id: "android:id/content"
+
+- runFlow:
+    when:
+      visible: "Verisoul SDK Test Suite"
+    commands:
+      - extendedWaitUntil:
+          visible: "SDK Configured"
+          timeout: 60000
+      - assertVisible: "SDK Configured"
+      - assertVisible:
+          id: "verisoul-session-id"
+      - assertVisible: "Repeat Test"
+      - assertVisible: "Chaos Test"
+      - scrollUntilVisible:
+          element: "Network Unavailable Test"
+          direction: DOWN
+          timeout: 10000
+
+- runFlow:
+    when:
+      visible: "Unable to load script"
+    commands:
+      - assertVisible: "Unable to load script"
+      - assertVisible: "DISMISS"
+
+- runFlow:
+    when:
+      visible: "DISMISS"
+    commands:
+      - assertVisible: "DISMISS"
+      - assertVisible: "RELOAD"
+
+- assertVisible:
+    id: "android:id/content"
