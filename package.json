@@ -62,7 +62,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/verisoul/react-native-sdk.git.git"
+    "url": "git+https://github.com/verisoul/react-native-sdk.git"
   },
   "author": "Verisoul <hello@verisoul.ai> (https://github.com/verisoul/react-native-sdk.git)",
   "license": "MIT",
