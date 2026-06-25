@@ -5,6 +5,11 @@ on:
     tags:
       - "v*"
 
+# Required for npm trusted publishing (OIDC). No NPM_TOKEN is used.
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   publish:
     name: Publish to npm
@@ -12,13 +17,16 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
+      # NOTE: do not set registry-url here. setup-node would write an
+      # `_authToken=${NODE_AUTH_TOKEN}` line to .npmrc which blocks the OIDC
+      # trusted-publishing flow. publishConfig.registry in package.json points
+      # npm at the public registry.
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "18"
-          registry-url: "https://registry.npmjs.org"
+          node-version: "22"
 
       - name: Get tag version
         id: get_tag
@@ -44,6 +52,10 @@ jobs:
 
           echo "Versions match"
 
+      # Trusted publishing requires npm CLI >= 11.5.1
+      - name: Upgrade npm
+        run: npm install -g npm@latest
+
       - name: Enable Corepack
         run: corepack enable
 
@@ -62,10 +74,8 @@ jobs:
       - name: Type check
         run: yarn typecheck
 
-      - name: Publish to npm
+      - name: Publish to npm (OIDC trusted publishing)
         run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish Summary
         run: |
