@@ -16,7 +16,7 @@ target 'VerisoulReactnativeExample' do
   config = use_native_modules!
   
   # VerisoulSDK from GitHub
-  pod 'VerisoulSDK', :git => 'https://github.com/verisoul/ios-sdk.git', :tag => '0.4.65'
+  pod 'VerisoulSDK', :git => 'https://github.com/verisoul/ios-sdk.git', :tag => '0.4.68'
 
   use_react_native!(
     :path => config[:reactNativePath],
