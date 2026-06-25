@@ -1,3 +1,9 @@
+## [0.4.68] - 2026-06-25
+
+### Changed
+- **Android**: bump `ai.verisoul:android` to **0.4.69** (env-specific WebView host + JS bridge validation)
+- **iOS**: bump `VerisoulSDK` to **0.4.68** (env-specific WebView host)
+
 ## [0.4.65] - 2026-01-23
 
 ### Changed
