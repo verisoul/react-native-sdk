@@ -1,3 +1,9 @@
+## [0.4.69] - 2026-06-26
+
+### Changed
+- **Android**: bump `ai.verisoul:android` to **0.4.70** (clear cached session on project/environment change)
+- **iOS**: bump `VerisoulSDK` to **0.4.69**
+
 ## [0.4.68] - 2026-06-25
 
 ### Changed
