@@ -1,3 +1,8 @@
+## [0.4.71] - 2026-07-07
+
+### Changed
+- **iOS**: bump `VerisoulSDK` to **0.4.70** — fixes a crash in React Native New Architecture (Fabric) apps where the SDK's touch-capture overlay cleanup could remove a React-managed view (tag collision), corrupting Fabric's mounting state and crashing with `NSRangeException` in `unmountChildComponentView` during view teardown
+
 ## [0.4.70] - 2026-07-06
 
 ### Fixed
