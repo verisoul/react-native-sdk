@@ -1500,7 +1500,7 @@ PODS:
     - React-perflogger (= 0.77.0)
     - React-utils (= 0.77.0)
   - SocketRocket (0.7.1)
-  - verisoul-reactnative (0.4.69):
+  - verisoul-reactnative (0.4.71):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1520,9 +1520,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - VerisoulSDK (= 0.4.69)
+    - VerisoulSDK (= 0.4.70)
     - Yoga
-  - VerisoulSDK (0.4.69)
+  - VerisoulSDK (0.4.70)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1594,7 +1594,7 @@ DEPENDENCIES:
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - verisoul-reactnative (from `../..`)
-  - VerisoulSDK (from `https://github.com/verisoul/ios-sdk.git`, tag `0.4.69`)
+  - VerisoulSDK (from `https://github.com/verisoul/ios-sdk.git`, tag `0.4.70`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -1737,14 +1737,14 @@ EXTERNAL SOURCES:
     :path: "../.."
   VerisoulSDK:
     :git: https://github.com/verisoul/ios-sdk.git
-    :tag: 0.4.69
+    :tag: 0.4.70
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 CHECKOUT OPTIONS:
   VerisoulSDK:
     :git: https://github.com/verisoul/ios-sdk.git
-    :tag: 0.4.69
+    :tag: 0.4.70
 
 SPEC CHECKSUMS:
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
@@ -1813,10 +1813,10 @@ SPEC CHECKSUMS:
   ReactCodegen: 58a974a1a86362975fd49596480c5f0f17ee06a2
   ReactCommon: e686c5766f0ebe5293be5a3957b833645cdac8ad
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  verisoul-reactnative: 93f7885470e82c3026ffd4bd7aec75520428ad2e
-  VerisoulSDK: 485cd13d1b5debfa2f5b4e4ec8b0b69e02a7631a
+  verisoul-reactnative: efc205e28d908dcc5f4cd60a81029ff1478497a0
+  VerisoulSDK: 792949d8db9f2257c81c416e427e5eacb58a10a5
   Yoga: c34725819ab0a5962e85455b9e56679b306910ee
 
-PODFILE CHECKSUM: 0cb62c8516f0bcd9abb5a3482fdcedc2ca1b68f7
+PODFILE CHECKSUM: 422099cb10e119241912b6688b7742e3a9ca87d0
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
