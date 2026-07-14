@@ -1,3 +1,8 @@
+## [0.4.73] - 2026-07-14
+
+### Changed
+- **Android**: bump `ai.verisoul:android` to **0.4.71** — recovers from a corrupted DataStore preferences file ("Unable to parse preferences proto") that previously made `getSessionId()` fail permanently with `SESSION_UNAVAILABLE` on affected devices until app storage was cleared
+
 ## [0.4.72] - 2026-07-14
 
 ### Changed
