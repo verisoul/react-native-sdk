@@ -85,7 +85,7 @@ npx expo run:android  # or npx expo run:ios
 
 ### Initialize the SDK
 
-The `configure()` method initializes the Verisoul SDK with your project credentials. This method must be called once when your application starts.
+The `configure()` method initializes the Verisoul SDK with your project credentials. Call `configure()` before you intend to retrieve a Verisoul session_id — only initialize the SDK if you plan to call the Verisoul API for that session.
 
 **Parameters:**
 
