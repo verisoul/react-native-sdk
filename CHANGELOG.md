@@ -1,3 +1,8 @@
+## [0.4.72] - 2026-07-14
+
+### Changed
+- **Docs**: recommend calling `configure()` before you intend to retrieve a session_id — only initialize the SDK if you plan to call the Verisoul API for that session
+
 ## [0.4.71] - 2026-07-07
 
 ### Changed
