@@ -1,3 +1,8 @@
+## [0.4.74] - 2026-07-23
+
+### Changed
+- **Android**: bump `ai.verisoul:android` to **0.4.72** — collects GPU renderer, CPU core count, and total device RAM in the `deviceData` telemetry payload (VER-910)
+
 ## [0.4.73] - 2026-07-14
 
 ### Changed
