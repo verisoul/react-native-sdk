@@ -1,3 +1,8 @@
+## [0.4.75] - 2026-08-06
+
+### Changed
+- **Android**: bump `ai.verisoul:android` to **0.4.73** — collects carrier identity fields (`networkOperatorName`, `simOperatorName`, plus numeric MCC+MNC `networkOperator`/`simOperator`) without requiring the `READ_PHONE_STATE` permission (VER-942)
+
 ## [0.4.74] - 2026-07-23
 
 ### Changed
