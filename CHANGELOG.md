@@ -1,3 +1,8 @@
+## [0.4.76] - 2026-08-06
+
+### Changed
+- **Android**: bump `ai.verisoul:android` to **0.4.74** — collects permission-free SIM country fields (`simCountryIso`, `networkCountryIso`) in the `networkData` payload (VER-944)
+
 ## [0.4.75] - 2026-08-06
 
 ### Changed
