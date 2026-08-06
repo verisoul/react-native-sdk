@@ -1,0 +1,58 @@
+# Cloud Build release pipeline: builds, tests, and publishes the package to npm.
+# The npm auth token lives in GCP Secret Manager and is only exposed inside the
+# ephemeral build container; nothing sensitive is stored in this repository.
+#
+# Manual (GitHub-independent) release from a local checkout of the tag:
+#   gcloud builds submit --project=verisoul --config=cloudbuild.yaml \
+#     --substitutions=_VERSION=X.Y.Z .
+#
+# Dry-run validation (no publish):
+#   gcloud builds submit --project=verisoul --config=cloudbuild.yaml \
+#     --substitutions=_VERSION=X.Y.Z,_PUBLISH_ARGS=--dry-run .
+steps:
+  - name: node:22
+    entrypoint: bash
+    secretEnv: ["NPM_TOKEN"]
+    args:
+      - -c
+      - |
+        set -euo pipefail
+        # Tag triggers pass the raw tag name (e.g. v0.4.75); strip the leading v.
+        VERSION="$(echo "${_VERSION}" | sed 's/^v//')"
+        echo "=== Publishing version $${VERSION} ==="
+
+        PKG_VERSION=$(node -p "require('./package.json').version")
+        if [ "$${PKG_VERSION}" != "$${VERSION}" ]; then
+          echo "Error: package.json version ($${PKG_VERSION}) must match tag version ($${VERSION})"
+          exit 1
+        fi
+
+        npm install -g npm@latest
+        corepack enable
+        yarn install --immutable
+        yarn prepare
+        yarn test
+        yarn lint
+        yarn typecheck
+
+        echo "//registry.npmjs.org/:_authToken=$${NPM_TOKEN}" > ~/.npmrc
+        npm publish --access public ${_PUBLISH_ARGS}
+        rm -f ~/.npmrc
+        echo "=== Published @verisoul_ai/react-native-verisoul@$${VERSION} ==="
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/verisoul/secrets/npm-publish-token/versions/latest
+      env: NPM_TOKEN
+
+substitutions:
+  _VERSION: "0.0.0"
+  _PUBLISH_ARGS: ""
+
+serviceAccount: projects/verisoul/serviceAccounts/npm-publisher@verisoul.iam.gserviceaccount.com
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
+
+timeout: 1800s

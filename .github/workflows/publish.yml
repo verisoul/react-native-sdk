@@ -1,9 +1,9 @@
 name: Publish to npm
 
+# DISABLED: releases are published via Google Cloud Build (see cloudbuild.yaml).
+# Tag-push triggering is turned off; manual dispatch is kept as a fallback.
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
 
 # Required for npm trusted publishing (OIDC). No NPM_TOKEN is used.
 permissions:
