@@ -5,7 +5,7 @@ import { VERISOUL_ENV, VERISOUL_API_KEY } from '@env';
 const getApiBaseUrl = (env: string): string => {
   switch (env?.toLowerCase()) {
     case 'production':
-      return 'https://api.verisoul.ai';
+      return 'https://api.prod.verisoul.ai';
     case 'sandbox':
       return 'https://api.sandbox.verisoul.ai';
     case 'staging':
