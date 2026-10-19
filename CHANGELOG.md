@@ -1,3 +1,8 @@
+## [0.4.77] - 2026-10-19
+
+### Fixed
+- **iOS**: bump `VerisoulSDK` to **0.4.72** — `getSessionId()` now recovers after a data collection pass fails or times out. Before, every later call in the same app process waited 20 seconds and failed with `SESSION_UNAVAILABLE` until `configure()` ran again. Also includes iOS 0.4.71 (touch capture moved to a gesture recognizer)
+
 ## [0.4.76] - 2026-08-06
 
 ### Changed
