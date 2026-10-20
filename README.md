@@ -125,6 +125,8 @@ The `getSessionID()` method returns the current session identifier after the SDK
 const sessionId = await Verisoul.getSessionID();
 ```
 
+On iOS, the SDK collects data only while the app is in the foreground. If `getSessionID()` is called while the app is in the background (for example during a silent push, background fetch, or location update), it returns once the user opens the app. A cached session is returned right away, and the timeout counts only time spent in the foreground. Don't await `getSessionID()` inside background handlers or in other code that has to finish while the app is in the background.
+
 ### Provide Touch Events
 
 Touch event data is collected and analyzed to detect automated/bot behavior by comparing touch patterns with device sensor data. This helps identify anomalies that may indicate fraud.
