@@ -1,3 +1,8 @@
+## [0.4.78] - 2026-10-19
+
+### Changed
+- **iOS**: bump `VerisoulSDK` to **0.4.73** — on iOS the SDK collects data only while the app is in the foreground. A `getSessionID()` call made while iOS has the app in the background (silent push, background fetch) now returns once the user opens the app, and its timeout counts only foreground time. Before, it failed with "Data collection timed out" as soon as the app was opened. Don't await `getSessionID()` inside background handlers
+
 ## [0.4.77] - 2026-10-19
 
 ### Fixed
