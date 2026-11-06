@@ -1,3 +1,8 @@
+## [0.4.79] - 2026-11-06
+
+### Fixed
+- **iOS**: bump `VerisoulSDK` to **0.4.74**. Fixes a crash in touch and motion capture (SIGSEGV in `FraudDetection.stop()`, or "NSConcreteHashTable was mutated while being enumerated") that could happen when capture stopped on several threads at once. Also fixes `getSessionID()` failing with "Data collection failed" on slow networks: the SDK used to cancel the collection page load after 3 seconds and count the cancel as a retry, and each attempt now gets 8 seconds
+
 ## [0.4.78] - 2026-10-19
 
 ### Changed
