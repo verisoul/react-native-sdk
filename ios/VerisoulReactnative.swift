@@ -11,8 +11,9 @@ class VerisoulReactnative: NSObject {
     "staging": .staging
   ]
 
-  @objc(configure:withProjectId:withResolver:withRejecter:)
+  @objc(configure:withProjectId:withCustomHostname:withResolver:withRejecter:)
   func configure(_ environment: String, withProjectId projectId: String,
+                 withCustomHostname customHostname: String?,
                  withResolver resolve: @escaping RCTPromiseResolveBlock,
                  withRejecter reject: @escaping RCTPromiseRejectBlock) {
     guard let env = VerisoulReactnative.sdkLogLevels[environment] else {
@@ -22,7 +23,12 @@ class VerisoulReactnative: NSObject {
 
     do {
       InternalVerisoulCore.shared.sdkType = .reactNative
-      try Verisoul.shared.configure(env: env, projectId: projectId)
+      if let customHostname {
+        // Loads the SDK WebView from the custom hostname, with no fallback to the Verisoul host.
+        try Verisoul.shared.configure(env: env, projectId: projectId, customHostname: customHostname)
+      } else {
+        try Verisoul.shared.configure(env: env, projectId: projectId)
+      }
       resolve("Configuration successful")
     } catch {
       // Extract error code if available from the error

@@ -36,7 +36,8 @@ export const reinitialize = async (): Promise<void> => {
 export const configure = async (config: VerisoulConfig): Promise<void> => {
   return await NativeVerisoul.configure(
     config.environment ?? VerisoulEnvironment.dev,
-    config.projectId
+    config.projectId,
+    config.customHostname ?? null
   );
 };
 

@@ -3,7 +3,11 @@ import { NativeModules } from './NativePackage';
 import { type NativeModule } from 'react-native';
 
 export interface NativeVerisoulModule extends NativeModule {
-  configure(environment: VerisoulEnvironment, projectId: string): Promise<void>;
+  configure(
+    environment: VerisoulEnvironment,
+    projectId: string,
+    customHostname: string | null
+  ): Promise<void>;
 
   reinitialize(): Promise<void>;
 

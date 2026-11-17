@@ -3,6 +3,7 @@
 @interface RCT_EXTERN_MODULE(VerisoulReactnative, NSObject)
 
 RCT_EXTERN_METHOD(configure:(NSString *)environment withProjectId:(NSString *)projectId
+                 withCustomHostname:(nullable NSString *)customHostname
                  withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 

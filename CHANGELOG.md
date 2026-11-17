@@ -1,3 +1,16 @@
+## [0.4.80] - 2026-11-16
+
+### Added
+- Optional custom hostname. Pass `customHostname` to `Verisoul.configure()` to load the SDK from the custom hostname set up for your Verisoul project (for example `js.example.com`) in place of the Verisoul host.
+  - Pass the hostname only, with no scheme, port or path.
+  - Use the hostname for the environment. The sandbox environment uses the `sandbox.` hostname, for example `sandbox.js.example.com`.
+  - When a hostname is set, the SDK always uses it and does not fall back to the Verisoul host. If the hostname is invalid or is not active for the project, `getSessionID()` fails with `SESSION_UNAVAILABLE`.
+  - Existing calls to `configure()` are unchanged.
+
+### Changed
+- **Android**: bump `ai.verisoul:android` to **0.4.75**.
+- **iOS**: bump `VerisoulSDK` to **0.4.75**.
+
 ## [0.4.79] - 2026-11-06
 
 ### Fixed
