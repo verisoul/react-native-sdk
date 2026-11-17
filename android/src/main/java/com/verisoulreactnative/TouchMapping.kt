@@ -6,6 +6,9 @@ package com.verisoulreactnative
  */
 internal object TouchMapping {
 
-  /** Converts a React Native density-independent pixel value to physical pixels. */
-  fun toPhysicalPixels(dp: Float, density: Float): Float = dp * density
+  /**
+   * Converts a React Native density-independent pixel value, measured from the React root view,
+   * to physical screen pixels. [originPx] is where the root view starts on screen.
+   */
+  fun toScreenPixels(dp: Float, density: Float, originPx: Int): Float = dp * density + originPx
 }

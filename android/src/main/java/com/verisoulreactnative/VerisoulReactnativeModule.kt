@@ -8,6 +8,7 @@ import ai.verisoul.sdk.VerisoulException
 import ai.verisoul.sdk.helpers.webview.VerisoulSessionCallback
 import android.os.SystemClock
 import android.view.MotionEvent
+import android.view.View
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -93,14 +94,19 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
 
       // MotionEvent times are on the uptime clock; the native SDK converts them to Unix time.
       val now = SystemClock.uptimeMillis()
-      // JavaScript sends density-independent pixels; native Android touch events use physical pixels.
+      // JavaScript sends density-independent pixels measured from the React root view;
+      // native Android touch events use physical screen pixels.
       val density = reactApplicationContext.resources.displayMetrics.density
+      val origin = IntArray(2)
+      reactApplicationContext.currentActivity
+        ?.findViewById<View>(android.R.id.content)
+        ?.getLocationOnScreen(origin)
       val motionEvent = MotionEvent.obtain(
         now,
         now,
         action,
-        TouchMapping.toPhysicalPixels(x, density),
-        TouchMapping.toPhysicalPixels(y, density),
+        TouchMapping.toScreenPixels(x, density, origin[0]),
+        TouchMapping.toScreenPixels(y, density, origin[1]),
         0
       )
       try {
