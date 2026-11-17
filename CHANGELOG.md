@@ -1,3 +1,11 @@
+## [0.4.81] - 2026-11-17
+
+### Fixed
+- **Android**: touches sent through `VerisoulTouchRootView` or `Verisoul.onTouchEvent()` now carry the correct time and use screen coordinates in physical pixels. `Verisoul.onTouchEvent()` still takes density-independent pixels.
+
+### Changed
+- `VerisoulTouchRootView` forwards the press only. Touch end and cancel events stay in JavaScript, which removes a bridge call per touch.
+
 ## [0.4.80] - 2026-11-16
 
 ### Added

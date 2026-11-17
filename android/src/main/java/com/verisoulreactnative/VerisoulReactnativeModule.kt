@@ -6,6 +6,7 @@ import ai.verisoul.sdk.Verisoul
 import ai.verisoul.sdk.VerisoulEnvironment
 import ai.verisoul.sdk.VerisoulException
 import ai.verisoul.sdk.helpers.webview.VerisoulSessionCallback
+import android.os.SystemClock
 import android.view.MotionEvent
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -21,13 +22,6 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
     "sandbox" to VerisoulEnvironment.Sandbox,
     "staging" to VerisoulEnvironment.Sandbox
   )
-
-  private val actions: Map<Int, Int> = mapOf(
-    0 to MotionEvent.ACTION_DOWN,
-    1 to MotionEvent.ACTION_UP,
-    2 to MotionEvent.ACTION_MOVE,
-
-    )
 
 
   override fun getName(): String {
@@ -91,15 +85,29 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
   fun onActionEvent(x: Float, y: Float, action: Int, promise: Promise) {
 
     try {
+      // The native SDK samples presses only, so other actions stop here.
+      if (action != MotionEvent.ACTION_DOWN) {
+        promise.resolve(null)
+        return
+      }
+
+      // MotionEvent times are on the uptime clock; the native SDK converts them to Unix time.
+      val now = SystemClock.uptimeMillis()
+      // JavaScript sends density-independent pixels; native Android touch events use physical pixels.
+      val density = reactApplicationContext.resources.displayMetrics.density
       val motionEvent = MotionEvent.obtain(
-        System.currentTimeMillis(),
-        System.currentTimeMillis(),
+        now,
+        now,
         action,
-        x,
-        y,
+        TouchMapping.toPhysicalPixels(x, density),
+        TouchMapping.toPhysicalPixels(y, density),
         0
       )
-      Verisoul.onTouchEvent(motionEvent)
+      try {
+        Verisoul.onTouchEvent(motionEvent)
+      } finally {
+        motionEvent.recycle()
+      }
 
       promise.resolve(null);
     } catch (e: Exception) {

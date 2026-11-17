@@ -44,9 +44,10 @@ export const configure = async (config: VerisoulConfig): Promise<void> => {
 /**
  * report actions are used to handle gesture events in a pan responder.
  *
- * @param x the location of touch event in X axis
- * @param y the location of touch event in Y axis
- * @param action SDK configurations. See {@link MotionAction} for more info.
+ * @param x the screen position of the touch event on the X axis, in density-independent pixels
+ * @param y the screen position of the touch event on the Y axis, in density-independent pixels
+ * @param action the type of motion. See {@link MotionAction} for more info.
+ *   On Android only `ACTION_DOWN` is recorded. Other actions are accepted and ignored.
  */
 export const onTouchEvent = async (
   x: number,

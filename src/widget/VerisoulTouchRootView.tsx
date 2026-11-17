@@ -11,17 +11,16 @@ export const VerisoulTouchRootView = ({
   style,
   ...rest
 }: VerisoulTouchRootViewProps) => {
-  const handleTouch = (event: GestureResponderEvent, action: MotionAction) => {
-    const { locationX, locationY } = event.nativeEvent;
-    onTouchEvent(locationX, locationY, action);
+  // The native SDK samples presses only, so the press is all that is forwarded.
+  const handleTouchStart = (event: GestureResponderEvent) => {
+    const { pageX, pageY } = event.nativeEvent;
+    onTouchEvent(pageX, pageY, MotionAction.ACTION_DOWN);
   };
   return (
     <View
       style={style ?? styles.container}
       pointerEvents="box-none" // Ensures child views receive touches
-      onTouchStart={(event) => handleTouch(event, MotionAction.ACTION_DOWN)} // Touch Down
-      onTouchCancel={(event) => handleTouch(event, MotionAction.ACTION_UP)} // Touch Up ch Up
-      onTouchEnd={(event) => handleTouch(event, MotionAction.ACTION_UP)} // Touch Up
+      onTouchStart={handleTouchStart}
       {...rest}
     />
   );
