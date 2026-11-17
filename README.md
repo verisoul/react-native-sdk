@@ -89,8 +89,9 @@ The `configure()` method initializes the Verisoul SDK with your project credenti
 
 **Parameters:**
 
-- `environment`: The environment to use `VerisoulEnvironment.prod` for production or `VerisoulEnvironment.sandbox` for testing
+- `environment`: The environment to use `VerisoulEnvironment.production` for production or `VerisoulEnvironment.sandbox` for testing
 - `projectId`: Your unique Verisoul project identifier
+- `customHostname`: Optional. A custom hostname to load the SDK from. See [Custom hostname](#custom-hostname)
 
 **Example:**
 
@@ -101,13 +102,29 @@ import Verisoul, {
 
 useEffect(() => {
   Verisoul.configure({
-    environment: VerisoulEnvironment.prod, // or VerisoulEnvironment.sandbox
+    environment: VerisoulEnvironment.production, // or VerisoulEnvironment.sandbox
     projectId: 'YOUR_PROJECT_ID',
   });
 }, []);
 ```
 
 When called, the Verisoul SDK will initialize its components, begin collecting device telemetry data, and prepare a session ID for fraud assessment.
+
+### Custom hostname
+
+Available from version 0.4.80. If you have set up a [custom hostname](https://docs.verisoul.ai/integration/custom-hostname) for your project, pass it to `configure()` and the SDK loads from your hostname.
+
+```js
+Verisoul.configure({
+  environment: VerisoulEnvironment.production,
+  projectId: 'YOUR_PROJECT_ID',
+  customHostname: 'js.example.com',
+});
+```
+
+- Pass the hostname only, with no `https://`, port or path.
+- Use the hostname for the environment. With `VerisoulEnvironment.sandbox`, pass the sandbox hostname, such as `sandbox.js.example.com`.
+- When a custom hostname is set, the SDK always uses it. If the hostname is invalid or is not active for your project, `getSessionID()` fails with `SESSION_UNAVAILABLE`.
 
 ### getSessionId()
 

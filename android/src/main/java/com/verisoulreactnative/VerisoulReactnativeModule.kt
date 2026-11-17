@@ -65,7 +65,7 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun configure(env: String, productId: String, promise: Promise) {
+  fun configure(env: String, productId: String, customHostname: String?, promise: Promise) {
     try {
       val logLevel = sdkLogLevels[env]
       if (logLevel == null) {
@@ -74,7 +74,12 @@ class VerisoulReactnativeModule(reactContext: ReactApplicationContext) :
       }
       
       InternalVerisoulCore.sdkType = SDKType.ReactNative
-      Verisoul.init(reactApplicationContext, logLevel, productId)
+      if (customHostname != null) {
+        // Loads the SDK WebView from the custom hostname, with no fallback to the Verisoul host.
+        Verisoul.init(reactApplicationContext, logLevel, productId, false, customHostname)
+      } else {
+        Verisoul.init(reactApplicationContext, logLevel, productId)
+      }
       promise.resolve(true)
     } catch (e: Exception) {
       val errorCode = (e as? VerisoulException)?.code ?: "UNKNOWN_ERROR"
